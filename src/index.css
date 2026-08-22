@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Italiana&family=Inter:wght@300;400;500;600;700&family=Pinyon+Script&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Italiana", serif;
+  --font-script: "Pinyon Script", cursive;
+  
+  --color-maroon-50: #faf2f3;
+  --color-maroon-100: #f3e2e5;
+  --color-maroon-200: #eacacc;
+  --color-maroon-300: #dbabae;
+  --color-maroon-400: #c57e84;
+  --color-maroon-500: #aa5159;
+  --color-maroon-600: #8f3b43;
+  --color-maroon-700: #742b31;
+  --color-maroon-800: #5a1d22;
+  --color-maroon-850: #450e12;
+  --color-maroon-900: #33070b;
+  --color-maroon-950: #1c0205;
+  
+  --color-emerald-50: #f0fdf4;
+  --color-emerald-100: #dcfce7;
+  --color-emerald-200: #bbf7d0;
+  --color-emerald-300: #86efac;
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+  --color-emerald-700: #047857;
+  --color-emerald-800: #065f46;
+  --color-emerald-900: #064e3b;
+  --color-emerald-950: #022c22;
+}
