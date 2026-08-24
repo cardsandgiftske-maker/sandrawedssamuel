@@ -51,13 +51,38 @@ export default function GuestPhotoUpload() {
   const carouselRef = useRef<HTMLDivElement>(null);
 
   // Dynamic QR Code target URL that works in live deployment, preview, and mobile browsers
-  const [uploadTargetUrl, setUploadTargetUrl] = useState('https://sandraandsamuel.wedding#upload-photos');
+  const [uploadTargetUrl, setUploadTargetUrl] = useState('https://sandraandsamuel.wedding/?action=select-photos#upload-photos');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const dropzoneRef = useRef<HTMLDivElement>(null);
+  const [isFromQrCode, setIsFromQrCode] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const cleanOrigin = window.location.origin;
       const cleanPath = window.location.pathname;
-      setUploadTargetUrl(`${cleanOrigin}${cleanPath}#upload-photos`);
+      const target = `${cleanOrigin}${cleanPath}?action=select-photos#upload-photos`;
+      setUploadTargetUrl(target);
+
+      // Check if user came directly via QR code or upload link
+      const search = window.location.search.toLowerCase();
+      const hash = window.location.hash.toLowerCase();
+      if (search.includes('select-photos') || search.includes('upload') || hash.includes('upload') || hash.includes('select')) {
+        setIsFromQrCode(true);
+
+        // Scroll directly to upload section
+        setTimeout(() => {
+          if (dropzoneRef.current) {
+            dropzoneRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          // Attempt automatic trigger of file picker
+          try {
+            fileInputRef.current?.click();
+          } catch {
+            // Mobile browser security may require explicit tap
+          }
+        }, 500);
+      }
 
       // Clean up any legacy sample photos from previous sessions
       try {
@@ -318,8 +343,45 @@ export default function GuestPhotoUpload() {
           </div>
 
           <form onSubmit={handleBatchUpload} className="space-y-5">
+            {/* QR Prompt Banner if direct opened */}
+            {isFromQrCode && (
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-[#FFF0F3] to-[#FCE4EC] border border-[#E892A2] text-[#5A1827] flex items-center justify-between gap-3 animate-pulse">
+                <div className="flex items-center gap-2.5">
+                  <Sparkles className="w-5 h-5 text-[#D4AF37] shrink-0" />
+                  <span className="text-xs sm:text-sm font-semibold font-sans">
+                    Welcome! Ready to upload your wedding snaps. Choose from gallery or take a live photo:
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Direct Action Quick Buttons */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="py-3 px-4 rounded-xl bg-[#5A1827] hover:bg-[#430F1B] text-white font-sans font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-98"
+              >
+                <Images className="w-4 h-4 text-[#D4AF37]" />
+                <span>Choose Photos from Gallery</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => cameraInputRef.current?.click()}
+                className="py-3 px-4 rounded-xl bg-white hover:bg-pink-50 border-2 border-[#5A1827] text-[#5A1827] font-sans font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm hover:shadow-md transition-all cursor-pointer active:scale-98"
+              >
+                <Camera className="w-4 h-4 text-[#5A1827]" />
+                <span>Snap Live Photo with Camera</span>
+              </button>
+            </div>
+
             {/* Multi-File Dropzone */}
-            <label className="border-2 border-dashed border-[#E892A2] hover:border-[#722F37] bg-[#FCFAF7] rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:bg-pink-50/50 group">
+            <div 
+              ref={dropzoneRef}
+              onClick={() => fileInputRef.current?.click()}
+              className="border-2 border-dashed border-[#E892A2] hover:border-[#722F37] bg-[#FCFAF7] rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:bg-pink-50/50 group"
+            >
               <div className="w-12 h-12 rounded-full bg-[#FFF0F3] text-[#722F37] flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
                 <Images className="w-6 h-6" />
               </div>
@@ -330,6 +392,7 @@ export default function GuestPhotoUpload() {
                 You can select multiple photos at once (JPG, PNG, HEIC)
               </p>
               <input
+                ref={fileInputRef}
                 type="file"
                 multiple
                 accept="image/*"
@@ -337,7 +400,16 @@ export default function GuestPhotoUpload() {
                 className="hidden"
                 disabled={isUploading}
               />
-            </label>
+              <input
+                ref={cameraInputRef}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                onChange={handleFilesSelect}
+                className="hidden"
+                disabled={isUploading}
+              />
+            </div>
 
             {/* Selected Photos Thumbnails Strip */}
             {selectedFiles.length > 0 && (
