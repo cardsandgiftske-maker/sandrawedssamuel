@@ -16,8 +16,45 @@ import MusicPlayer from './components/MusicPlayer';
 export default function App() {
   const [activeSection, setActiveSection] = useState('hero-section');
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [isEnvelopeOpened, setIsEnvelopeOpened] = useState(false);
+  const [isEnvelopeOpened, setIsEnvelopeOpened] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.toLowerCase();
+      const search = window.location.search.toLowerCase();
+      if (
+        hash.includes('upload') ||
+        hash.includes('gallery') ||
+        hash.includes('photo') ||
+        search.includes('upload') ||
+        search.includes('photo')
+      ) {
+        return true;
+      }
+    }
+    return false;
+  });
   const [shouldPlayMusic, setShouldPlayMusic] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.toLowerCase();
+      const search = window.location.search.toLowerCase();
+      if (
+        hash.includes('upload') ||
+        hash.includes('gallery') ||
+        hash.includes('photo') ||
+        search.includes('upload') ||
+        search.includes('photo')
+      ) {
+        setIsEnvelopeOpened(true);
+        setTimeout(() => {
+          const el = document.getElementById('upload-photos') || document.getElementById('gallery-section');
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 300);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (!isEnvelopeOpened) {
