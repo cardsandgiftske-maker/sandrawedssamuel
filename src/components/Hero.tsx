@@ -3,6 +3,8 @@ import { motion } from 'motion/react';
 import { Calendar, Sparkles, Heart } from 'lucide-react';
 import { WEDDING_DATE, WEDDING_DETAILS } from '../data';
 
+import couplePortrait from '../assets/images/carol_and_john_portrait_1784461560414.jpg';
+
 interface TimeLeft {
   days: number;
   hours: number;
@@ -49,12 +51,12 @@ export default function Hero() {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#FAF0F2] via-[#F6E3E6] to-[#F1D7DC] text-stone-850 py-12 sm:py-16 md:py-20 px-3 sm:px-6 md:px-10" id="hero-section">
       {/* Background Image with Soft Dusty Pink Wash & Radiant Warm Gold Ambient Glows */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <img
-          src="/src/assets/images/carol_and_john_portrait_1784461506194.jpg"
-          alt="Sandra and Sam Portrait"
-          className="w-full h-full object-cover object-center opacity-[0.12] scale-105 filter brightness-[1.02] contrast-[0.98]"
-          referrerPolicy="no-referrer"
-        />
+       <img
+  src={couplePortrait}
+  alt="Sandra and Sam Portrait"
+  className="w-full h-full object-cover object-center opacity-[0.12] scale-105 filter brightness-[1.02] contrast-[0.98]"
+  referrerPolicy="no-referrer"
+/>
         {/* Soft dusty pink and radiant warm gold ambient glows */}
         <div className="absolute top-0 -left-20 w-96 h-96 bg-[#E892A2]/30 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-10 -right-20 w-96 h-96 bg-[#5A1827]/20 rounded-full blur-3xl pointer-events-none" />
