@@ -1,8 +1,0 @@
-{
-  "name": "Sandra and Samuel Wedding Invitation",
-  "description": "An elegant wedding invitation and RSVP portal for Sandra Chepchumba Kiptoo and Samuel Ochieng Okello, featuring church service at All Saints Cathedral, reception at Marist International University, wedding program, dress code, gifting, attendance confirmation with dietary preferences, and a live photo gallery portal.",
-  "requestFramePermissions": [],
-  "majorCapabilities": [
-    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
-  ]
-}
