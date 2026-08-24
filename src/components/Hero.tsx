@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { Calendar, Sparkles, Heart } from 'lucide-react';
 import { WEDDING_DATE, WEDDING_DETAILS } from '../data';
 
-import couplePortrait from './assets/images/carol_and_john_portrait_1784461560414.jpg';
+import couplePortrait from '../assets/images/carol_and_john_portrait_1784461560414.jpg';
 
 interface TimeLeft {
   days: number;
