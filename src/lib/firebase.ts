@@ -241,6 +241,7 @@ export function subscribeToRsvps(onUpdate: (rsvps: RsvpGuest[]) => void): () => 
         }
       }, (error) => {
         console.warn('Firebase snapshot subscription failed:', error);
+        onUpdate(getLocalRsvps().sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()));
       });
     } catch (e) {
       console.warn('Could not subscribe in real-time, relying on polling:', e);
@@ -369,6 +370,7 @@ export function subscribeToGalleryPhotos(onUpdate: (photos: GalleryPhoto[]) => v
         }
       }, (error) => {
         console.warn('Firebase gallery snapshot subscription failed:', error);
+        onUpdate(getLocalGallery());
       });
     } catch (e) {
       console.warn('Could not subscribe gallery in real-time:', e);
