@@ -113,11 +113,11 @@ export default function Hero() {
             
             <div className="relative w-64 sm:w-80 md:w-96 aspect-[16/10] rounded-2xl overflow-hidden shadow-2xl border-2 border-[#D4AF37] p-1.5 bg-gradient-to-br from-[#FFF9EE] via-white to-[#FFF5EB]">
               <img
-                src="/src/assets/images/carol_and_john_portrait_1784461506194.jpg"
-                alt="Sandra & Sam Couple Portrait"
-                className="w-full h-full object-cover object-center rounded-xl"
-                referrerPolicy="no-referrer"
-              />
+  src={couplePortrait}
+  alt="Sandra and Sam Portrait"
+  className="w-full h-full object-cover object-center opacity-[0.12] scale-105 filter brightness-[1.02] contrast-[0.98]"
+  referrerPolicy="no-referrer"
+/>
             </div>
           </motion.div>
 
