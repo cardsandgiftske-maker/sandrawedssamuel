@@ -269,16 +269,16 @@ export function subscribeToRsvps(onUpdate: (rsvps: RsvpGuest[]) => void): () => 
 const GALLERY_COLLECTION = 'gallery';
 
 const getLocalGallery = (): GalleryPhoto[] => {
-  const saved = localStorage.getItem('sandra_samuel_guest_photos') || localStorage.getItem('philcollins_gallery');
+  const saved = localStorage.getItem('sandra_samuel_guest_photos');
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if (Array.isArray(parsed)) return parsed;
     } catch (e) {
       // ignore JSON error
     }
   }
-  return INITIAL_GALLERY;
+  return [];
 };
 
 const saveLocalGallery = (photos: GalleryPhoto[]) => {
@@ -316,12 +316,6 @@ export async function getGalleryPhotos(): Promise<GalleryPhoto[]> {
       querySnapshot.forEach((doc) => {
         photos.push(doc.data() as GalleryPhoto);
       });
-      if (photos.length === 0) {
-        for (const item of INITIAL_GALLERY) {
-          await setDoc(doc(db, GALLERY_COLLECTION, item.id), item);
-          photos.push(item);
-        }
-      }
       return photos;
     } catch (error) {
       console.warn('Failed to fetch gallery from Firebase:', error);
