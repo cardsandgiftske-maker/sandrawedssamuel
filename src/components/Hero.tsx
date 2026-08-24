@@ -115,7 +115,7 @@ export default function Hero() {
               <img
   src={couplePortrait}
   alt="Sandra and Sam Portrait"
-  className="w-full h-full object-cover object-center opacity-[0.12] scale-105 filter brightness-[1.02] contrast-[0.98]"
+  className="w-full h-full object-cover object-center opacity-[1] scale-105 filter brightness-[1.02] contrast-[0.98]"
   referrerPolicy="no-referrer"
 />
             </div>
