@@ -32,7 +32,7 @@ interface SelectedFileItem {
 }
 
 export default function GuestPhotoUpload() {
-  const [photos, setPhotos] = useState<GalleryPhoto[]>(INITIAL_GALLERY);
+  const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
   
   // Multi-upload state
   const [selectedFiles, setSelectedFiles] = useState<SelectedFileItem[]>([]);
@@ -58,6 +58,20 @@ export default function GuestPhotoUpload() {
       const cleanOrigin = window.location.origin;
       const cleanPath = window.location.pathname;
       setUploadTargetUrl(`${cleanOrigin}${cleanPath}#upload-photos`);
+
+      // Clean up any legacy sample photos from previous sessions
+      try {
+        const saved = localStorage.getItem('sandra_samuel_guest_photos');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.some((p: GalleryPhoto) => p.id && p.id.startsWith('photo-'))) {
+            const filtered = parsed.filter((p: GalleryPhoto) => !p.id.startsWith('photo-'));
+            localStorage.setItem('sandra_samuel_guest_photos', JSON.stringify(filtered));
+          }
+        }
+      } catch {
+        // ignore
+      }
     }
   }, []);
 
@@ -72,9 +86,7 @@ export default function GuestPhotoUpload() {
   // Subscribe to real-time photo stream
   useEffect(() => {
     const unsubscribe = subscribeToGalleryPhotos((updatedPhotos) => {
-      if (updatedPhotos && updatedPhotos.length > 0) {
-        setPhotos(updatedPhotos);
-      }
+      setPhotos(updatedPhotos || []);
     });
     return () => {
       unsubscribe();
@@ -442,7 +454,7 @@ export default function GuestPhotoUpload() {
           </form>
         </div>
 
-        {/* 3. LIVE PHOTO CAROUSEL (Beneath Direct Upload with Download Option) */}
+        {/* 3. LIVE PHOTO CAROUSEL / CLEAN EMPTY STATE (Beneath Direct Upload with Download Option) */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -453,90 +465,106 @@ export default function GuestPhotoUpload() {
             </div>
 
             {/* Carousel Navigation Arrows */}
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => scrollCarousel('left')}
-                className="w-9 h-9 rounded-full bg-white border border-[#E892A2]/40 hover:bg-[#FFF0F3] text-[#722F37] flex items-center justify-center transition-all shadow-xs cursor-pointer active:scale-95"
-                title="Scroll Left"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => scrollCarousel('right')}
-                className="w-9 h-9 rounded-full bg-white border border-[#E892A2]/40 hover:bg-[#FFF0F3] text-[#722F37] flex items-center justify-center transition-all shadow-xs cursor-pointer active:scale-95"
-                title="Scroll Right"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-
-          {/* Carousel Track */}
-          <div
-            ref={carouselRef}
-            className="flex gap-5 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-[#E892A2]/40 scrollbar-track-transparent select-none"
-            style={{ scrollSnapType: 'x mandatory' }}
-          >
-            {photos.map((photo) => (
-              <div
-                key={photo.id}
-                className="min-w-[260px] sm:min-w-[300px] max-w-[300px] bg-white border border-[#E892A2]/30 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col snap-start shrink-0 group"
-              >
-                {/* Photo Image */}
-                <div
-                  className="relative aspect-[4/3] bg-stone-100 overflow-hidden cursor-pointer"
-                  onClick={() => setActiveLightboxPhoto(photo)}
+            {photos.length > 0 && (
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => scrollCarousel('left')}
+                  className="w-9 h-9 rounded-full bg-white border border-[#E892A2]/40 hover:bg-[#FFF0F3] text-[#722F37] flex items-center justify-center transition-all shadow-xs cursor-pointer active:scale-95"
+                  title="Scroll Left"
                 >
-                  <img
-                    src={photo.url}
-                    alt={photo.caption}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                  {/* Overlay Action Buttons */}
-                  <div className="absolute top-2 right-2 flex items-center gap-1.5 opacity-90 group-hover:opacity-100 transition-opacity">
-                    <button
-                      onClick={(e) => handleDownloadPhoto(e, photo.url, `wedding_${photo.id}.jpg`)}
-                      className="p-2 bg-stone-900/80 hover:bg-stone-900 text-white rounded-full shadow-md transition-all cursor-pointer"
-                      title="Download Photo"
-                    >
-                      <Download className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Card Body */}
-                <div className="p-4 flex-1 flex flex-col justify-between space-y-2.5">
-                  <div>
-                    <p className="font-serif text-sm font-bold text-stone-900 line-clamp-1">
-                      {photo.caption}
-                    </p>
-                    <p className="text-[11px] text-stone-500 font-sans mt-0.5">
-                      By <span className="font-semibold text-[#722F37]">{photo.uploaderName}</span>
-                    </p>
-                  </div>
-
-                  <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-xs">
-                    <button
-                      onClick={(e) => handleDownloadPhoto(e, photo.url, `wedding_${photo.id}.jpg`)}
-                      className="text-[#722F37] hover:text-[#5C242C] font-semibold text-xs flex items-center gap-1 cursor-pointer"
-                    >
-                      <Download className="w-3.5 h-3.5" />
-                      <span>Download</span>
-                    </button>
-
-                    <button
-                      onClick={(e) => handleLike(e, photo.id)}
-                      className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#FFF0F3] hover:bg-[#FFE4E8] text-[#722F37] font-semibold text-xs transition-colors cursor-pointer active:scale-90"
-                    >
-                      <Heart className="w-3.5 h-3.5 fill-[#722F37] text-[#722F37]" />
-                      <span>{photo.likes || 1}</span>
-                    </button>
-                  </div>
-                </div>
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => scrollCarousel('right')}
+                  className="w-9 h-9 rounded-full bg-white border border-[#E892A2]/40 hover:bg-[#FFF0F3] text-[#722F37] flex items-center justify-center transition-all shadow-xs cursor-pointer active:scale-95"
+                  title="Scroll Right"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
               </div>
-            ))}
+            )}
           </div>
+
+          {photos.length > 0 ? (
+            /* Carousel Track */
+            <div
+              ref={carouselRef}
+              className="flex gap-5 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-[#E892A2]/40 scrollbar-track-transparent select-none"
+              style={{ scrollSnapType: 'x mandatory' }}
+            >
+              {photos.map((photo) => (
+                <div
+                  key={photo.id}
+                  className="min-w-[260px] sm:min-w-[300px] max-w-[300px] bg-white border border-[#E892A2]/30 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col snap-start shrink-0 group"
+                >
+                  {/* Photo Image */}
+                  <div
+                    className="relative aspect-[4/3] bg-stone-100 overflow-hidden cursor-pointer"
+                    onClick={() => setActiveLightboxPhoto(photo)}
+                  >
+                    <img
+                      src={photo.url}
+                      alt={photo.caption}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                    {/* Overlay Action Buttons */}
+                    <div className="absolute top-2 right-2 flex items-center gap-1.5 opacity-90 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={(e) => handleDownloadPhoto(e, photo.url, `wedding_${photo.id}.jpg`)}
+                        className="p-2 bg-stone-900/80 hover:bg-stone-900 text-white rounded-full shadow-md transition-all cursor-pointer"
+                        title="Download Photo"
+                      >
+                        <Download className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Card Body */}
+                  <div className="p-4 flex-1 flex flex-col justify-between space-y-2.5">
+                    <div>
+                      <p className="font-serif text-sm font-bold text-stone-900 line-clamp-1">
+                        {photo.caption}
+                      </p>
+                      <p className="text-[11px] text-stone-500 font-sans mt-0.5">
+                        By <span className="font-semibold text-[#722F37]">{photo.uploaderName}</span>
+                      </p>
+                    </div>
+
+                    <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-xs">
+                      <button
+                        onClick={(e) => handleDownloadPhoto(e, photo.url, `wedding_${photo.id}.jpg`)}
+                        className="text-[#722F37] hover:text-[#5C242C] font-semibold text-xs flex items-center gap-1 cursor-pointer"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        <span>Download</span>
+                      </button>
+
+                      <button
+                        onClick={(e) => handleLike(e, photo.id)}
+                        className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#FFF0F3] hover:bg-[#FFE4E8] text-[#722F37] font-semibold text-xs transition-colors cursor-pointer active:scale-90"
+                      >
+                        <Heart className="w-3.5 h-3.5 fill-[#722F37] text-[#722F37]" />
+                        <span>{photo.likes || 1}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-white/80 border border-[#E892A2]/30 rounded-2xl p-8 sm:p-10 text-center flex flex-col items-center justify-center shadow-xs">
+              <div className="w-14 h-14 rounded-2xl bg-[#FFF0F3] text-[#722F37] flex items-center justify-center mb-3 border border-[#E892A2]/40">
+                <Camera className="w-7 h-7" />
+              </div>
+              <h4 className="font-serif text-lg font-bold text-stone-900 mb-1">
+                No Guest Photos Uploaded Yet
+              </h4>
+              <p className="text-xs sm:text-sm text-stone-500 font-sans max-w-md leading-relaxed">
+                Be the first to share your celebration memories! Scan the QR code or select photos above to add them to Sandra &amp; Samuel's live wedding gallery.
+              </p>
+            </div>
+          )}
         </div>
 
       </div>
