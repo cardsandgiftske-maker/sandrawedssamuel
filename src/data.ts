@@ -162,42 +162,5 @@ export const COLOR_SWATCHES: ColorSwatch[] = [
   }
 ];
 
-export const INITIAL_GALLERY: GalleryPhoto[] = [
-  {
-    id: 'photo-1',
-    url: '/src/assets/images/carol_and_john_portrait_1784461506194.jpg',
-    caption: 'Sandra & Samuel - Celebrating Our Love',
-    uploaderName: 'Sandra & Samuel',
-    deviceInfo: 'iPhone 15 Pro',
-    likes: 38,
-    uploadedAt: 'Recent'
-  },
-  {
-    id: 'photo-2',
-    url: '/src/assets/images/church_venue_1784464948619.jpg',
-    caption: 'All Saints Cathedral Church - The Sanctuary',
-    uploaderName: 'Church Committee',
-    deviceInfo: 'iPhone 15 Pro Max',
-    likes: 29,
-    uploadedAt: 'Recent'
-  },
-  {
-    id: 'photo-3',
-    url: '/src/assets/images/reception_venue_1784464963155.jpg',
-    caption: 'Marist International University Grounds',
-    uploaderName: 'Event Decor Team',
-    deviceInfo: 'iPhone 14 Pro',
-    likes: 34,
-    uploadedAt: 'Recent'
-  },
-  {
-    id: 'photo-4',
-    url: '/src/assets/images/reception_venue_1784475057575.jpg',
-    caption: 'Celebration Garden & Reception Setting',
-    uploaderName: 'Bridal Party',
-    deviceInfo: 'iPhone 15 Pro Max',
-    likes: 42,
-    uploadedAt: 'Recent'
-  }
-];
+export const INITIAL_GALLERY: GalleryPhoto[] = [];
 
