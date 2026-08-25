@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, CheckCircle2, AlertCircle, Sparkles, User, Phone, Check, Heart, Utensils, Calendar, MapPin } from 'lucide-react';
+import { Mail, CheckCircle2, AlertCircle, Sparkles, User, Phone, Check, Heart, Utensils, Calendar, MapPin, Lock } from 'lucide-react';
 import { RsvpGuest } from '../types';
-import { WEDDING_DETAILS } from '../data';
-import { saveRsvp, isFirebaseConfigured } from '../lib/firebase';
+import { saveRsvp, findRsvpByPhone, isFirebaseConfigured } from '../lib/firebase';
+
+const LOCAL_USER_RSVP_KEY = 'sandra_samuel_user_rsvp';
 
 export default function RsvpForm() {
   const [fullName, setFullName] = useState('');
@@ -18,6 +19,21 @@ export default function RsvpForm() {
 
   // Floating button state
   const [showFloatingBtn, setShowFloatingBtn] = useState(true);
+
+  // Check if guest previously submitted on this device
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(LOCAL_USER_RSVP_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.fullName && parsed.phoneNumber) {
+          setSubmittedGuest(parsed);
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,11 +56,14 @@ export default function RsvpForm() {
     e.preventDefault();
     setErrorMessage('');
 
-    if (!fullName.trim()) {
+    const trimmedName = fullName.trim();
+    const trimmedPhone = phoneNumber.trim();
+
+    if (!trimmedName) {
       setErrorMessage('Please enter your full name.');
       return;
     }
-    if (!phoneNumber.trim()) {
+    if (!trimmedPhone) {
       setErrorMessage('Please enter your phone number.');
       return;
     }
@@ -52,18 +71,33 @@ export default function RsvpForm() {
     setLoading(true);
 
     try {
+      // Check if this phone number has already submitted an RSVP
+      const existingRsvp = await findRsvpByPhone(trimmedPhone);
+      if (existingRsvp) {
+        setErrorMessage(`An RSVP has already been submitted for phone number "${trimmedPhone}" (${existingRsvp.fullName}). Each phone number can only submit once.`);
+        setLoading(false);
+        return;
+      }
+
       const newGuest: RsvpGuest = {
         id: 'rsvp-' + Date.now(),
-        fullName: fullName.trim(),
-        phoneNumber: phoneNumber.trim(),
+        fullName: trimmedName,
+        phoneNumber: trimmedPhone,
         willAttend,
         adultsCount: willAttend === 'yes' ? 1 : 0,
-        dietaryRequirements: dietaryRequirements.trim() || undefined,
-        notes: notes.trim() || undefined,
+        dietaryRequirements: dietaryRequirements.trim() || 'None',
+        notes: notes.trim() || '',
         submittedAt: new Date().toISOString(),
       };
 
       await saveRsvp(newGuest);
+
+      // Save locally to lock this device to their submission
+      try {
+        localStorage.setItem(LOCAL_USER_RSVP_KEY, JSON.stringify(newGuest));
+      } catch {
+        // ignore
+      }
 
       setSubmittedGuest(newGuest);
       setLoading(false);
@@ -76,6 +110,7 @@ export default function RsvpForm() {
 
       window.dispatchEvent(new Event('rsvp_database_updated'));
     } catch (err) {
+      console.error('Error in RSVP submission:', err);
       setErrorMessage('Something went wrong saving your RSVP. Please try again.');
       setLoading(false);
     }
@@ -127,129 +162,152 @@ export default function RsvpForm() {
                 )}
               </div>
 
-              <form onSubmit={handleRsvpSubmit} className="space-y-4" id="rsvp-wedding-form">
-                
-                {/* 1. Full Names input */}
-                <div className="space-y-1.5">
-                  <label className="text-xs uppercase tracking-widest text-[#2C4D5E] font-sans font-bold flex items-center gap-1">
-                    <User className="w-3.5 h-3.5 text-[#4B738A]" />
-                    <span>Full Names <span className="text-[#5A1827]">*</span></span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Sandra Chebet & Samuel Ochieng"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="w-full bg-[#F7FAFC] border-2 border-[#7D9BA8]/30 focus:border-[#4B738A] focus:ring-2 focus:ring-[#7D9BA8]/20 rounded-xl px-4 py-3 text-sm text-stone-900 outline-none transition-all font-medium"
-                  />
-                  <p className="text-[11px] text-stone-500 font-sans">
-                    Please enter the full name(s) of guest(s) attending.
-                  </p>
-                </div>
-
-                {/* 2. Phone Number input */}
-                <div className="space-y-1.5">
-                  <label className="text-xs uppercase tracking-widest text-[#2C4D5E] font-sans font-bold flex items-center gap-1">
-                    <Phone className="w-3.5 h-3.5 text-[#4B738A]" />
-                    <span>Phone Number <span className="text-[#5A1827]">*</span></span>
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    placeholder="e.g. 0712 345 678"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    className="w-full bg-[#F7FAFC] border-2 border-[#7D9BA8]/30 focus:border-[#4B738A] focus:ring-2 focus:ring-[#7D9BA8]/20 rounded-xl px-4 py-3 text-sm text-stone-900 outline-none transition-all font-medium"
-                  />
-                </div>
-
-                {/* Attendance toggle with Deep Burgundy & Dusty Blue styling */}
-                <div className="space-y-1.5 pt-1">
-                  <label className="text-xs uppercase tracking-widest text-[#2C4D5E] font-sans font-bold block">
-                    Will you attend?
-                  </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setWillAttend('yes')}
-                      className={`py-2.5 px-3 text-xs uppercase tracking-wider font-sans font-bold border-2 rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                        willAttend === 'yes'
-                          ? 'bg-[#5A1827] border-[#5A1827] text-white shadow-md'
-                          : 'bg-[#F2F7FA] border-[#7D9BA8]/40 text-[#2C4D5E] hover:border-[#4B738A]'
-                      }`}
-                    >
-                      <Check className="w-3.5 h-3.5 shrink-0" />
-                      <span>Yes, attending</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setWillAttend('no')}
-                      className={`py-2.5 px-3 text-xs uppercase tracking-wider font-sans font-bold border-2 rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                        willAttend === 'no'
-                          ? 'bg-rose-50 border-rose-400 text-rose-800 shadow-xs'
-                          : 'bg-[#F2F7FA] border-[#7D9BA8]/40 text-stone-600 hover:text-stone-900'
-                      }`}
-                    >
-                      <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                      <span>Decline</span>
-                    </button>
+              {submittedGuest ? (
+                /* Already Submitted Notice in Place of Form */
+                <div className="py-6 px-4 bg-[#F2F7FA] border-2 border-[#7D9BA8]/30 rounded-2xl text-center space-y-4">
+                  <div className="w-12 h-12 bg-white border-2 border-[#4B738A]/40 rounded-full flex items-center justify-center mx-auto text-[#4B738A] shadow-xs">
+                    <Lock className="w-5 h-5 text-[#4B738A]" />
+                  </div>
+                  <div>
+                    <h4 className="font-serif text-lg font-bold text-[#5A1827]">
+                      Attendance Already Confirmed
+                    </h4>
+                    <p className="text-xs text-stone-600 font-sans mt-1.5 leading-relaxed max-w-sm mx-auto">
+                      An RSVP has already been submitted for <span className="font-bold text-stone-900">{submittedGuest.fullName}</span> ({submittedGuest.phoneNumber}).
+                    </p>
+                  </div>
+                  <div className="p-3 bg-white border border-[#7D9BA8]/30 rounded-xl text-[11px] text-stone-600 font-sans">
+                    Each phone number is limited to one RSVP. If you need to make changes to your reservation, please contact Sandra &amp; Samuel directly.
                   </div>
                 </div>
-
-                {/* 3. Any dietary requirements or allergies */}
-                <div className="space-y-1.5 pt-1">
-                  <label className="text-xs uppercase tracking-widest text-[#2C4D5E] font-sans font-bold flex items-center gap-1">
-                    <Utensils className="w-3.5 h-3.5 text-[#4B738A]" />
-                    <span>Any dietary requirements or allergies</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Vegetarian, Gluten-free, Nut allergy, None"
-                    value={dietaryRequirements}
-                    onChange={(e) => setDietaryRequirements(e.target.value)}
-                    className="w-full bg-[#F7FAFC] border-2 border-[#7D9BA8]/30 focus:border-[#4B738A] focus:ring-2 focus:ring-[#7D9BA8]/20 rounded-xl px-4 py-3 text-sm text-stone-900 outline-none transition-all font-medium"
-                  />
-                </div>
-
-                {/* Optional Message / Wishes */}
-                <div className="space-y-1.5 pt-1">
-                  <label className="text-xs uppercase tracking-widest text-stone-600 font-sans font-bold block">
-                    Warm Wishes for the Couple (Optional)
-                  </label>
-                  <textarea
-                    placeholder="Leave a sweet congratulatory message for Sandra & Sam..."
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
-                    rows={2}
-                    className="w-full bg-[#F7FAFC] border-2 border-[#7D9BA8]/30 focus:border-[#4B738A] focus:ring-2 focus:ring-[#7D9BA8]/20 rounded-xl px-4 py-2.5 text-sm text-stone-900 outline-none transition-all resize-none font-medium"
-                  />
-                </div>
-
-                {/* Errors display */}
-                {errorMessage && (
-                  <div className="p-3.5 bg-rose-50 border-2 border-rose-300 rounded-xl flex items-center gap-2.5 text-xs text-rose-800 font-semibold">
-                    <AlertCircle className="w-4 h-4 shrink-0" />
-                    <span>{errorMessage}</span>
+              ) : (
+                <form onSubmit={handleRsvpSubmit} className="space-y-4" id="rsvp-wedding-form">
+                  
+                  {/* 1. Full Names input */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs uppercase tracking-widest text-[#2C4D5E] font-sans font-bold flex items-center gap-1">
+                      <User className="w-3.5 h-3.5 text-[#4B738A]" />
+                      <span>Full Names <span className="text-[#5A1827]">*</span></span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Sandra Chebet & Samuel Ochieng"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className="w-full bg-[#F7FAFC] border-2 border-[#7D9BA8]/30 focus:border-[#4B738A] focus:ring-2 focus:ring-[#7D9BA8]/20 rounded-xl px-4 py-3 text-sm text-stone-900 outline-none transition-all font-medium"
+                    />
+                    <p className="text-[11px] text-stone-500 font-sans">
+                      Please enter the full name(s) of guest(s) attending.
+                    </p>
                   </div>
-                )}
 
-                {/* Submit button: Dusty Blue CTA button with Deep Burgundy Primary text */}
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-3.5 mt-2 bg-gradient-to-r from-[#4B738A] via-[#3D647A] to-[#4B738A] hover:from-[#3D647A] hover:to-[#2F5369] active:scale-98 disabled:opacity-50 text-white font-sans font-bold uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:shadow-xl"
-                >
-                  {loading ? (
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  ) : (
-                    <>
-                      <Sparkles className="w-4 h-4 text-[#F2D7DC]" />
-                      <span className="tracking-widest">Submit RSVP</span>
-                    </>
+                  {/* 2. Phone Number input */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs uppercase tracking-widest text-[#2C4D5E] font-sans font-bold flex items-center gap-1">
+                      <Phone className="w-3.5 h-3.5 text-[#4B738A]" />
+                      <span>Phone Number <span className="text-[#5A1827]">*</span></span>
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      placeholder="e.g. 0712 345 678"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      className="w-full bg-[#F7FAFC] border-2 border-[#7D9BA8]/30 focus:border-[#4B738A] focus:ring-2 focus:ring-[#7D9BA8]/20 rounded-xl px-4 py-3 text-sm text-stone-900 outline-none transition-all font-medium"
+                    />
+                    <p className="text-[11px] text-stone-500 font-sans">
+                      One RSVP per phone number.
+                    </p>
+                  </div>
+
+                  {/* Attendance toggle with Deep Burgundy & Dusty Blue styling */}
+                  <div className="space-y-1.5 pt-1">
+                    <label className="text-xs uppercase tracking-widest text-[#2C4D5E] font-sans font-bold block">
+                      Will you attend?
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setWillAttend('yes')}
+                        className={`py-2.5 px-3 text-xs uppercase tracking-wider font-sans font-bold border-2 rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                          willAttend === 'yes'
+                            ? 'bg-[#5A1827] border-[#5A1827] text-white shadow-md'
+                            : 'bg-[#F2F7FA] border-[#7D9BA8]/40 text-[#2C4D5E] hover:border-[#4B738A]'
+                        }`}
+                      >
+                        <Check className="w-3.5 h-3.5 shrink-0" />
+                        <span>Yes, attending</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setWillAttend('no')}
+                        className={`py-2.5 px-3 text-xs uppercase tracking-wider font-sans font-bold border-2 rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                          willAttend === 'no'
+                            ? 'bg-rose-50 border-rose-400 text-rose-800 shadow-xs'
+                            : 'bg-[#F2F7FA] border-[#7D9BA8]/40 text-stone-600 hover:text-stone-900'
+                        }`}
+                      >
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                        <span>Decline</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 3. Any dietary requirements or allergies */}
+                  <div className="space-y-1.5 pt-1">
+                    <label className="text-xs uppercase tracking-widest text-[#2C4D5E] font-sans font-bold flex items-center gap-1">
+                      <Utensils className="w-3.5 h-3.5 text-[#4B738A]" />
+                      <span>Any dietary requirements or allergies</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Vegetarian, Gluten-free, Nut allergy, None"
+                      value={dietaryRequirements}
+                      onChange={(e) => setDietaryRequirements(e.target.value)}
+                      className="w-full bg-[#F7FAFC] border-2 border-[#7D9BA8]/30 focus:border-[#4B738A] focus:ring-2 focus:ring-[#7D9BA8]/20 rounded-xl px-4 py-3 text-sm text-stone-900 outline-none transition-all font-medium"
+                    />
+                  </div>
+
+                  {/* Optional Message / Wishes */}
+                  <div className="space-y-1.5 pt-1">
+                    <label className="text-xs uppercase tracking-widest text-stone-600 font-sans font-bold block">
+                      Warm Wishes for the Couple (Optional)
+                    </label>
+                    <textarea
+                      placeholder="Leave a sweet congratulatory message for Sandra & Sam..."
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      rows={2}
+                      className="w-full bg-[#F7FAFC] border-2 border-[#7D9BA8]/30 focus:border-[#4B738A] focus:ring-2 focus:ring-[#7D9BA8]/20 rounded-xl px-4 py-2.5 text-sm text-stone-900 outline-none transition-all resize-none font-medium"
+                    />
+                  </div>
+
+                  {/* Errors display */}
+                  {errorMessage && (
+                    <div className="p-3.5 bg-rose-50 border-2 border-rose-300 rounded-xl flex items-start gap-2.5 text-xs text-rose-800 font-semibold leading-relaxed">
+                      <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                      <span>{errorMessage}</span>
+                    </div>
                   )}
-                </button>
-              </form>
+
+                  {/* Submit button: Dusty Blue CTA button with Deep Burgundy Primary text */}
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full py-3.5 mt-2 bg-gradient-to-r from-[#4B738A] via-[#3D647A] to-[#4B738A] hover:from-[#3D647A] hover:to-[#2F5369] active:scale-98 disabled:opacity-50 text-white font-sans font-bold uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg hover:shadow-xl"
+                  >
+                    {loading ? (
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4 text-[#F2D7DC]" />
+                        <span className="tracking-widest">Submit RSVP</span>
+                      </>
+                    )}
+                  </button>
+                </form>
+              )}
             </div>
 
             {/* Confirmation / Info Column */}
@@ -314,12 +372,9 @@ export default function RsvpForm() {
 
                     <div className="mt-6 pt-4 border-t border-[#7D9BA8]/20 text-center text-xs text-stone-600 space-y-2">
                       <p className="font-serif">We look forward to celebrating with you on 17th October 2026!</p>
-                      <button
-                        onClick={() => setSubmittedGuest(null)}
-                        className="text-[#5A1827] hover:underline font-bold block mx-auto cursor-pointer text-xs uppercase tracking-wider"
-                      >
-                        Submit another RSVP
-                      </button>
+                      <div className="text-[11px] text-[#2C4D5E] font-sans font-medium bg-[#F2F7FA] py-2 px-3 rounded-lg border border-[#7D9BA8]/30">
+                        Your response is locked. If you need to make changes, please reach out to the couple.
+                      </div>
                     </div>
                   </motion.div>
                 ) : (
