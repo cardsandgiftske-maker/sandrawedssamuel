@@ -19,7 +19,12 @@ export default function AdminPanel() {
     const unsubscribe = subscribeToRsvps((updatedGuests) => {
       setGuests(updatedGuests);
     });
-    return () => unsubscribe();
+    const handleOpenAdmin = () => setIsOpen(true);
+    window.addEventListener('open_admin_panel', handleOpenAdmin);
+    return () => {
+      unsubscribe();
+      window.removeEventListener('open_admin_panel', handleOpenAdmin);
+    };
   }, []);
 
   const handleLogin = (e: React.FormEvent) => {
