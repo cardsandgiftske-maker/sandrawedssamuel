@@ -108,17 +108,69 @@ const getSeedData = (): RsvpGuest[] => {
   ];
 };
 
+// Helper to remove any undefined keys before sending to Firestore
+function cleanDocData<T extends Record<string, any>>(data: T): Record<string, any> {
+  const cleaned: Record<string, any> = {};
+  for (const [key, value] of Object.entries(data)) {
+    if (value !== undefined) {
+      cleaned[key] = value;
+    }
+  }
+  return cleaned;
+}
+
+/**
+ * Normalize phone numbers to facilitate reliable duplicate prevention
+ */
+export function normalizePhoneNumber(phone: string): string {
+  if (!phone) return '';
+  const digitsOnly = phone.replace(/[^0-9]/g, '');
+  if (digitsOnly.startsWith('0') && digitsOnly.length === 10) {
+    return '254' + digitsOnly.slice(1);
+  }
+  return digitsOnly;
+}
+
 // EXPORTED CORE API FUNCTIONS (SFC / transparent dual database logic)
+
+/**
+ * Check if an RSVP with the given phone number already exists
+ */
+export async function findRsvpByPhone(phoneNumber: string): Promise<RsvpGuest | null> {
+  const norm = normalizePhoneNumber(phoneNumber);
+  if (!norm) return null;
+
+  const db = getDb();
+  if (db) {
+    try {
+      const q = query(collection(db, COLLECTION_NAME));
+      const querySnapshot = await getDocs(q);
+      for (const docSnap of querySnapshot.docs) {
+        const item = docSnap.data() as RsvpGuest;
+        if (item.phoneNumber && normalizePhoneNumber(item.phoneNumber) === norm) {
+          return item;
+        }
+      }
+    } catch (err) {
+      console.warn('Error querying Firestore by phone:', err);
+    }
+  }
+
+  const local = getLocalRsvps();
+  const found = local.find(item => item.phoneNumber && normalizePhoneNumber(item.phoneNumber) === norm);
+  return found || null;
+}
 
 /**
  * Save or update an RSVP entry
  */
 export async function saveRsvp(rsvp: RsvpGuest): Promise<void> {
+  const cleanedRsvp = cleanDocData(rsvp) as RsvpGuest;
   const db = getDb();
   if (db) {
     try {
       const docRef = doc(db, COLLECTION_NAME, rsvp.id);
-      await setDoc(docRef, rsvp);
+      await setDoc(docRef, cleanedRsvp);
       return;
     } catch (error) {
       console.warn('Failed to save to Firebase, saving to localStorage instead:', error);
@@ -127,7 +179,8 @@ export async function saveRsvp(rsvp: RsvpGuest): Promise<void> {
   
   // Local storage fallback
   const existing = getLocalRsvps();
-  const updated = existing.filter((item) => item.id !== rsvp.id && item.phoneNumber !== rsvp.phoneNumber);
+  const norm = normalizePhoneNumber(rsvp.phoneNumber);
+  const updated = existing.filter((item) => item.id !== rsvp.id && normalizePhoneNumber(item.phoneNumber) !== norm);
   updated.push(rsvp);
   saveLocalRsvps(updated);
 }
