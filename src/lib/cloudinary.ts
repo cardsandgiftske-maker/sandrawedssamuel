@@ -42,10 +42,10 @@ export function getCloudinaryConfig(): { cloudName: string; uploadPreset: string
     if (savedPreset) uploadPreset = savedPreset;
   }
 
-  // Default fallback preset & cloud name if not set
+  // Explicitly fallback to your configured Cloud Name and Unsigned Preset
   return {
-    cloudName: cloudName.trim() || 'dphc0jlnr',
-    uploadPreset: uploadPreset.trim() || 'wedding_photos'
+    cloudName: cloudName.trim() || 'b6onpcyk',
+    uploadPreset: uploadPreset.trim() || 'sandraandsamuel'
   };
 }
 
@@ -58,7 +58,6 @@ export const isCloudinaryConfigured = (): boolean => {
  * Compresses an image file client-side to ensure fast uploads even on mobile connections
  */
 async function compressImageIfNeeded(fileOrBlob: File | Blob, maxDimension = 1920, quality = 0.85): Promise<Blob | File> {
-  // If not an image or SVG/GIF, return as is
   if (typeof window === 'undefined') return fileOrBlob;
   if (fileOrBlob.type && (!fileOrBlob.type.startsWith('image/') || fileOrBlob.type.includes('svg') || fileOrBlob.type.includes('gif'))) {
     return fileOrBlob;
@@ -72,7 +71,6 @@ async function compressImageIfNeeded(fileOrBlob: File | Blob, maxDimension = 192
       URL.revokeObjectURL(objectUrl);
       let { width, height } = img;
 
-      // Only downscale if larger than maxDimension
       if (width > maxDimension || height > maxDimension) {
         if (width > height) {
           height = Math.round((height * maxDimension) / width);
@@ -119,7 +117,6 @@ async function compressImageIfNeeded(fileOrBlob: File | Blob, maxDimension = 192
 
 /**
  * Uploads a photo to Cloudinary
- * Falls back to high-quality compressed data URL if network/preset issue occurs
  */
 export async function uploadToCloudinary(
   fileOrDataUrl: File | Blob | string,
@@ -134,10 +131,8 @@ export async function uploadToCloudinary(
     const formData = new FormData();
 
     if (typeof fileOrDataUrl === 'string') {
-      // Base64 string or remote URL
       formData.append('file', fileOrDataUrl);
     } else {
-      // File or Blob
       const processedBlob = await compressImageIfNeeded(fileOrDataUrl);
       const filename = (fileOrDataUrl as File).name || 'wedding_photo.jpg';
       formData.append('file', processedBlob, filename);
@@ -160,10 +155,14 @@ export async function uploadToCloudinary(
       }
     }
 
-    // If Cloudinary returned an error, log it
-    const errorJson = await response.json().catch(() => null);
-    console.warn('Cloudinary upload endpoint response:', errorJson);
-    
+    const errorData = await response.json().catch(() => null);
+    console.error('Cloudinary upload failed:', {
+      status: response.status,
+      cloudName,
+      uploadPreset,
+      details: errorData
+    });
+
     if (typeof fileOrDataUrl === 'string') {
       return fileOrDataUrl;
     }
