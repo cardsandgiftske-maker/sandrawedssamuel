@@ -5,7 +5,6 @@ import { WEDDING_DETAILS } from '../data';
 
 import portrait1 from '../assets/images/sandra_and_Samuel_potrait_1.jpg';
 import portrait2 from '../assets/images/sandra_and_Samuel_potrait_2.jpg';
-import portrait3 from '../assets/images/sandra_and_Samuel_potrait_3.jpg';
 import portrait4 from '../assets/images/sandra_and_Samuel_potrait_4.jpg';
 import portrait5 from '../assets/images/sandra_and_Samuel_potrait_5.jpg';
 import portrait6 from '../assets/images/sandra_and_Samuel_potrait_6.jpg';
@@ -26,44 +25,39 @@ const COUPLE_PHOTOS = [
     subtitle: 'Walking in Love & Grace',
   },
   {
-    src: portrait3,
-    title: 'Sunset Embrace',
-    subtitle: 'Two Hearts, One Journey',
-  },
-  {
     src: portrait4,
     title: 'Joyful Union',
     subtitle: 'Blessed by God’s Perfect Timing',
   },
     {
     src: portrait5,
-    title: 'Joyful Union',
-    subtitle: 'Blessed by God’s Perfect Timing',
+    title: 'Love & Happiness',
+    subtitle: 'Choosing each other Everyday',
   },
     {
     src: portrait6,
-    title: 'Joyful Union',
-    subtitle: 'Blessed by God’s Perfect Timing',
+    title: 'Life Together',
+    subtitle: 'Experiencing life together in Love',
   },
     {
     src: portrait7,
-    title: 'Joyful Union',
-    subtitle: 'Blessed by God’s Perfect Timing',
+    title: 'Smiles of Love',
+    subtitle: 'Riding the waves of Love',
   },
     {
     src: portrait8,
-    title: 'Joyful Union',
-    subtitle: 'Blessed by God’s Perfect Timing',
+    title: 'Future Together',
+    subtitle: 'Walking into the forever thereafter',
   },
     {
     src: portrait9,
-    title: 'Joyful Union',
-    subtitle: 'Blessed by God’s Perfect Timing',
+    title: 'Love Birds',
+    subtitle: 'Blessed to have found each other',
   },
     {
     src: portrait11,
-    title: 'Joyful Union',
-    subtitle: 'Blessed by God’s Perfect Timing',
+    title: 'Best Friends',
+    subtitle: 'Before Love we were friends first',
   },
 ];
 
