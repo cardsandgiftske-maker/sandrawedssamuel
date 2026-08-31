@@ -3,10 +3,16 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Calendar, Sparkles, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
 import { WEDDING_DETAILS } from '../data';
 
-import portrait1 from '../assets/images/carol_and_john_portrait_1784461506194.jpg';
-import portrait2 from '../assets/images/couple_garden_portrait_1787761477846.jpg';
-import portrait3 from '../assets/images/couple_sunset_embrace_1787761495508.jpg';
-import portrait4 from '../assets/images/couple_reception_joy_1787761511477.jpg';
+import portrait1 from '../assets/images/sandra_and_Samuel_potrait_1.jpg';
+import portrait2 from '../assets/images/sandra_and_Samuel_potrait_2.jpg';
+import portrait3 from '../assets/images/sandra_and_Samuel_potrait_3.jpg';
+import portrait4 from '../assets/images/sandra_and_Samuel_potrait_4.jpg';
+import portrait5 from '../assets/images/sandra_and_Samuel_potrait_5.jpg';
+import portrait6 from '../assets/images/sandra_and_Samuel_potrait_6.jpg';
+import portrait7 from '../assets/images/sandra_and_Samuel_potrait_7.jpg';
+import portrait8 from '../assets/images/sandra_and_Samuel_potrait_8.jpg';
+import portrait9 from '../assets/images/sandra_and_Samuel_potrait_9.jpg';
+import portrait11 from '../assets/images/sandra_and_Samuel_potrait_11.jpg';
 
 const COUPLE_PHOTOS = [
   {
@@ -26,6 +32,36 @@ const COUPLE_PHOTOS = [
   },
   {
     src: portrait4,
+    title: 'Joyful Union',
+    subtitle: 'Blessed by God’s Perfect Timing',
+  },
+    {
+    src: portrait5,
+    title: 'Joyful Union',
+    subtitle: 'Blessed by God’s Perfect Timing',
+  },
+    {
+    src: portrait6,
+    title: 'Joyful Union',
+    subtitle: 'Blessed by God’s Perfect Timing',
+  },
+    {
+    src: portrait7,
+    title: 'Joyful Union',
+    subtitle: 'Blessed by God’s Perfect Timing',
+  },
+    {
+    src: portrait8,
+    title: 'Joyful Union',
+    subtitle: 'Blessed by God’s Perfect Timing',
+  },
+    {
+    src: portrait9,
+    title: 'Joyful Union',
+    subtitle: 'Blessed by God’s Perfect Timing',
+  },
+    {
+    src: portrait11,
     title: 'Joyful Union',
     subtitle: 'Blessed by God’s Perfect Timing',
   },
