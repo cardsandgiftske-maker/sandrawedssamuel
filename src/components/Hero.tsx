@@ -21,7 +21,7 @@ const COUPLE_PHOTOS = [
   },
   {
     src: portrait2,
-    title: 'Garden Romance',
+    title: 'Sandy Romance',
     subtitle: 'Walking in Love & Grace',
   },
   {
