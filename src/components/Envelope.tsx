@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Heart } from 'lucide-react';
 import rusticHallImage from '../assets/images/rustic_wedding_hall_1787674482870.jpg';
-import couplePortrait from '../assets/images/carol_and_john_portrait_1784461506194.jpg';
+import couplePortrait from '../assets/images/sandra_and_Samuel_potrait_1.jpg';
 
 interface EnvelopeProps {
   onOpen: () => void;
