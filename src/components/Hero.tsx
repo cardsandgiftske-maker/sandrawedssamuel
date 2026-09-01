@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Calendar, Sparkles, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Calendar, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 import { WEDDING_DETAILS } from '../data';
 
 import portrait1 from '../assets/images/sandra_and_Samuel_potrait_1.jpg';
@@ -29,32 +29,32 @@ const COUPLE_PHOTOS = [
     title: 'Joyful Union',
     subtitle: 'Blessed by God’s Perfect Timing',
   },
-    {
+  {
     src: portrait5,
     title: 'Love & Happiness',
     subtitle: 'Choosing each other Everyday',
   },
-    {
+  {
     src: portrait6,
     title: 'Life Together',
     subtitle: 'Experiencing life together in Love',
   },
-    {
+  {
     src: portrait7,
     title: 'Smiles of Love',
     subtitle: 'Riding the waves of Love',
   },
-    {
+  {
     src: portrait8,
     title: 'Future Together',
     subtitle: 'Walking into the forever thereafter',
   },
-    {
+  {
     src: portrait9,
     title: 'Love Birds',
     subtitle: 'Blessed to have found each other',
   },
-    {
+  {
     src: portrait11,
     title: 'Best Friends',
     subtitle: 'Before Love we were friends first',
@@ -91,7 +91,6 @@ export default function Hero() {
     return () => clearInterval(interval);
   }, [nextSlide, isPaused]);
 
-
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-[#FAF2F4] text-stone-850 py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8" id="hero-section">
       {/* Clean, subtle background tone */}
@@ -117,93 +116,92 @@ export default function Hero() {
             <div className="relative w-full aspect-[16/10] rounded-xl sm:rounded-2xl overflow-hidden bg-stone-900 border border-stone-200">
               {/* Active Photo Slide with Smooth Crossfade & Motion */}
               <AnimatePresence initial={false} custom={direction} mode="wait">
-                  <motion.div
-                    key={currentPhotoIndex}
-                    custom={direction}
-                    initial={{ opacity: 0, scale: 1.05 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.97 }}
-                    transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-                    className="absolute inset-0 w-full h-full"
-                  >
-                    <img
-                      src={COUPLE_PHOTOS[currentPhotoIndex].src}
-                      alt={COUPLE_PHOTOS[currentPhotoIndex].title}
-                      className="w-full h-full object-cover object-center"
-                      referrerPolicy="no-referrer"
-                    />
+                <motion.div
+                  key={currentPhotoIndex}
+                  custom={direction}
+                  initial={{ opacity: 0, scale: 1.05 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.97 }}
+                  transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+                  className="absolute inset-0 w-full h-full"
+                >
+                  <img
+                    src={COUPLE_PHOTOS[currentPhotoIndex].src}
+                    alt={COUPLE_PHOTOS[currentPhotoIndex].title}
+                    className="w-full h-full object-cover object-center"
+                    referrerPolicy="no-referrer"
+                  />
 
-                    {/* Gradient overlay for bottom caption readability */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-black/20 pointer-events-none" />
+                  {/* Gradient overlay for bottom caption readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-black/20 pointer-events-none" />
 
-                    {/* Bottom Caption Overlay */}
-                    <div className="absolute bottom-0 inset-x-0 p-3 sm:p-4 text-left pointer-events-none flex items-end justify-between">
-                      <div>
-                        <p className="text-white font-serif text-xs sm:text-sm md:text-base font-bold drop-shadow-md">
-                          {COUPLE_PHOTOS[currentPhotoIndex].title}
-                        </p>
-                        <p className="text-[#F2D7DC] text-[10px] sm:text-xs font-sans tracking-wide drop-shadow-sm opacity-90">
-                          {COUPLE_PHOTOS[currentPhotoIndex].subtitle}
-                        </p>
-                      </div>
+                  {/* Bottom Caption Overlay */}
+                  <div className="absolute bottom-0 inset-x-0 p-3 sm:p-4 text-left pointer-events-none flex items-end justify-between">
+                    <div>
+                      <p className="text-white font-serif text-xs sm:text-sm md:text-base font-bold drop-shadow-md">
+                        {COUPLE_PHOTOS[currentPhotoIndex].title}
+                      </p>
+                      <p className="text-[#F2D7DC] text-[10px] sm:text-xs font-sans tracking-wide drop-shadow-sm opacity-90">
+                        {COUPLE_PHOTOS[currentPhotoIndex].subtitle}
+                      </p>
                     </div>
-                  </motion.div>
-                </AnimatePresence>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
 
-                {/* Top Corner Photo Index Badge */}
-                <div className="absolute top-2.5 right-2.5 z-20 px-2.5 py-1 rounded-full bg-black/45 backdrop-blur-md border border-white/20 text-white font-sans text-[10px] sm:text-xs font-medium tracking-wider">
-                  {currentPhotoIndex + 1} / {COUPLE_PHOTOS.length}
-                </div>
-
-                {/* Navigation Chevron: Prev */}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    prevSlide();
-                  }}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/40 hover:bg-[#5A1827]/80 active:scale-95 backdrop-blur-md border border-white/30 text-white flex items-center justify-center transition-all cursor-pointer shadow-lg opacity-85 hover:opacity-100"
-                  aria-label="Previous photo"
-                  title="Previous Photo"
-                >
-                  <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                </button>
-
-                {/* Navigation Chevron: Next */}
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    nextSlide();
-                  }}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/40 hover:bg-[#5A1827]/80 active:scale-95 backdrop-blur-md border border-white/30 text-white flex items-center justify-center transition-all cursor-pointer shadow-lg opacity-85 hover:opacity-100"
-                  aria-label="Next photo"
-                  title="Next Photo"
-                >
-                  <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                </button>
-
-                {/* Bottom Center Indicator Dots */}
-                <div className="absolute bottom-2.5 right-3 z-20 flex items-center gap-1.5 pointer-events-auto">
-                  {COUPLE_PHOTOS.map((_, idx) => (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        goToSlide(idx);
-                      }}
-                      className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                        idx === currentPhotoIndex
-                          ? 'w-5 sm:w-6 bg-[#D4AF37] shadow-sm'
-                          : 'w-1.5 bg-white/60 hover:bg-white'
-                      }`}
-                      aria-label={`Go to slide ${idx + 1}`}
-                    />
-                  ))}
-                </div>
-
+              {/* Top Corner Photo Index Badge */}
+              <div className="absolute top-2.5 right-2.5 z-20 px-2.5 py-1 rounded-full bg-black/45 backdrop-blur-md border border-white/20 text-white font-sans text-[10px] sm:text-xs font-medium tracking-wider">
+                {currentPhotoIndex + 1} / {COUPLE_PHOTOS.length}
               </div>
+
+              {/* Navigation Chevron: Prev */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  prevSlide();
+                }}
+                className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/40 hover:bg-[#5A1827]/80 active:scale-95 backdrop-blur-md border border-white/30 text-white flex items-center justify-center transition-all cursor-pointer shadow-lg opacity-85 hover:opacity-100"
+                aria-label="Previous photo"
+                title="Previous Photo"
+              >
+                <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+              </button>
+
+              {/* Navigation Chevron: Next */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  nextSlide();
+                }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/40 hover:bg-[#5A1827]/80 active:scale-95 backdrop-blur-md border border-white/30 text-white flex items-center justify-center transition-all cursor-pointer shadow-lg opacity-85 hover:opacity-100"
+                aria-label="Next photo"
+                title="Next Photo"
+              >
+                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+              </button>
+
+              {/* Bottom Center Indicator Dots */}
+              <div className="absolute bottom-2.5 right-3 z-20 flex items-center gap-1.5 pointer-events-auto">
+                {COUPLE_PHOTOS.map((_, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goToSlide(idx);
+                    }}
+                    className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                      idx === currentPhotoIndex
+                        ? 'w-5 sm:w-6 bg-[#D4AF37] shadow-sm'
+                        : 'w-1.5 bg-white/60 hover:bg-white'
+                    }`}
+                    aria-label={`Go to slide ${idx + 1}`}
+                  />
+                ))}
+              </div>
+
             </div>
           </motion.div>
 
@@ -313,4 +311,3 @@ export default function Hero() {
     </section>
   );
 }
-
