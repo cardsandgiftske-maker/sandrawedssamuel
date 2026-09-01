@@ -93,77 +93,30 @@ export default function Hero() {
 
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#FAF0F2] via-[#F6E3E6] to-[#F1D7DC] text-stone-850 py-12 sm:py-16 md:py-20 px-3 sm:px-6 md:px-10" id="hero-section">
-      {/* Background Image with Soft Dusty Pink Wash & Radiant Warm Gold Ambient Glows */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <img
-          src="/src/assets/images/carol_and_john_portrait_1784461506194.jpg"
-          alt="Sandra and Sam Portrait"
-          className="w-full h-full object-cover object-center opacity-[0.12] scale-105 filter brightness-[1.02] contrast-[0.98]"
-          referrerPolicy="no-referrer"
-        />
-        {/* Soft dusty pink and radiant warm gold ambient glows */}
-        <div className="absolute top-0 -left-20 w-96 h-96 bg-[#E892A2]/30 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-10 -right-20 w-96 h-96 bg-[#5A1827]/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-[#D4AF37]/25 rounded-full blur-3xl pointer-events-none animate-pulse" style={{ animationDuration: '7s' }} />
-        <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-[#C5A059]/20 rounded-full blur-3xl pointer-events-none" />
-        
-        {/* Soft dusty pink gradient overlays for pristine readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#F1D7DC]/95 via-[#FAF0F2]/85 to-[#FAF0F2]/65" />
-        <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#FAF0F2]/40 to-[#F1D7DC]/90" />
+    <section className="relative min-h-screen flex items-center justify-center bg-[#FAF2F4] text-stone-850 py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8" id="hero-section">
+      {/* Clean, subtle background tone */}
+      <div className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-b from-[#FAF0F2] via-[#FAF2F4] to-[#F5E6E9]" />
 
-        {/* Fine Linen Texture Pattern */}
-        <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#D4AF37_1px,transparent_1px)] [background-size:24px_24px]" />
-      </div>
-
-      {/* Screen End-to-End Foil-Linen Frame Border System */}
-      <div className="absolute inset-2 sm:inset-3 md:inset-5 border-2 border-[#D4AF37]/70 rounded-2xl sm:rounded-3xl pointer-events-none z-20 shadow-[inset_0_0_20px_rgba(212,175,55,0.15)]" />
-      <div className="absolute inset-3.5 sm:inset-5 md:inset-7 border border-dashed border-[#D4AF37]/45 rounded-xl sm:rounded-2xl pointer-events-none z-20" />
-      
-      {/* Ornamental Gold Corner Cornerpieces for Screen End-to-End Frame */}
-      <div className="absolute top-4 left-4 sm:top-6 sm:left-6 md:top-8 md:left-8 text-[#D4AF37]/80 text-sm sm:text-base select-none pointer-events-none z-20 font-serif">
-        ❖
-      </div>
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 md:top-8 md:right-8 text-[#D4AF37]/80 text-sm sm:text-base select-none pointer-events-none z-20 font-serif">
-        ❖
-      </div>
-      <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 md:bottom-8 md:left-8 text-[#D4AF37]/80 text-sm sm:text-base select-none pointer-events-none z-20 font-serif">
-        ❖
-      </div>
-      <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 text-[#D4AF37]/80 text-sm sm:text-base select-none pointer-events-none z-20 font-serif">
-        ❖
-      </div>
-
-      {/* Main Luxury Wedding Invitation Card with Gold Foil Trim extending End-to-End */}
-      <div className="relative z-10 w-full max-w-5xl mx-auto">
+      {/* Main Wedding Invitation Container */}
+      <div className="relative z-10 w-full max-w-4xl mx-auto">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: 'easeOut' }}
-          className="relative bg-white/85 backdrop-blur-md rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-14 shadow-[0_20px_60px_rgba(90,24,39,0.1)] border-2 border-[#D4AF37]/60 flex flex-col items-center text-center overflow-hidden w-full"
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          className="relative bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-14 border border-stone-200/80 shadow-xs flex flex-col items-center text-center w-full"
         >
-          {/* Inner Inset Gold Foil Border */}
-          <div className="absolute inset-2.5 sm:inset-4 rounded-xl sm:rounded-2xl border border-[#D4AF37]/40 pointer-events-none" />
-          <div className="absolute inset-3.5 sm:inset-5 rounded-lg sm:rounded-xl border border-dashed border-[#D4AF37]/25 pointer-events-none" />
-
-          {/* Couple Photo Carousel Frame with Gold Leaf Border & Radiance */}
+          {/* Couple Photo Carousel Frame */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: -10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="mb-6 relative group z-10 w-full max-w-md sm:max-w-lg md:max-w-xl mx-auto"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.15 }}
+            className="mb-6 relative z-10 w-full max-w-md sm:max-w-lg md:max-w-xl mx-auto"
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
           >
-            {/* Warm gold and burgundy aura behind photo */}
-            <div className="absolute -inset-3 rounded-3xl bg-gradient-to-r from-[#D4AF37]/45 via-[#5A1827]/30 to-[#C5A059]/45 blur-lg opacity-85 group-hover:opacity-100 transition-opacity" />
-            
-            <div className="relative w-full aspect-[16/10] sm:aspect-[16/10] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border-2 border-[#D4AF37] p-1.5 bg-gradient-to-br from-[#FFF9EE] via-white to-[#FFF5EB]">
-              {/* Carousel Inner Container */}
-              <div className="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden bg-stone-900 select-none">
-                
-                {/* Active Photo Slide with Smooth Crossfade & Motion */}
-                <AnimatePresence initial={false} custom={direction} mode="wait">
+            <div className="relative w-full aspect-[16/10] rounded-xl sm:rounded-2xl overflow-hidden bg-stone-900 border border-stone-200">
+              {/* Active Photo Slide with Smooth Crossfade & Motion */}
+              <AnimatePresence initial={false} custom={direction} mode="wait">
                   <motion.div
                     key={currentPhotoIndex}
                     custom={direction}
