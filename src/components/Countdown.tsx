@@ -143,7 +143,7 @@ export default function Countdown() {
           <span className="text-[#D4AF37] hidden sm:inline">•</span>
           <div className="flex items-center gap-1.5 text-stone-600 font-medium">
             <Clock className="w-3.5 h-3.5 text-[#D4AF37]" />
-            <span>Ceremony begins at 10:00 AM EAT</span>
+            <span>Ceremony begins at 09:00 AM EAT</span>
           </div>
         </motion.div>
 
