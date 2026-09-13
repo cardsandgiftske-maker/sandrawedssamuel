@@ -38,9 +38,8 @@ export const WEDDING_DETAILS = {
   ],
   registry: {
     message: 'Having you share in our special day is a gift in itself. Should you wish to bless us further, we gratefully welcome gifts in the form of an envelope or M-Pesa.',
-    paybillNumber: '247247',
-    accountNumber: 'Sandra & Sam',
-    accountName: 'Sandra & Sam Wedding',
+    mpesaNumber: '0723734961',
+    accountName: 'Sandra Kiptoo',
     envelopeNote: 'Gift envelopes can be presented at the wedding reception during the gift session.'
   },
   dressCode: {
