@@ -18,7 +18,10 @@ import {
   Trash2,
   Copy,
   Check,
-  ExternalLink
+  ExternalLink,
+  RefreshCw,
+  AlertCircle,
+  Loader2
 } from 'lucide-react';
 import { INITIAL_GALLERY } from '../data';
 import { GalleryPhoto } from '../types';
@@ -43,6 +46,15 @@ export default function GuestPhotoUpload() {
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
+  
+  // Live Camera Viewfinder State
+  const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
+  const [facingMode, setFacingMode] = useState<'environment' | 'user'>('environment');
+  const [isCameraLoading, setIsCameraLoading] = useState(false);
+  const [cameraError, setCameraError] = useState<string | null>(null);
+  const [isShutterFlashing, setIsShutterFlashing] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
   
   // Lightbox State
   const [activeLightboxPhoto, setActiveLightboxPhoto] = useState<GalleryPhoto | null>(null);
@@ -107,6 +119,119 @@ export default function GuestPhotoUpload() {
       setTimeout(() => setCopiedLink(false), 2500);
     }
   };
+
+  // Live Camera Control Methods
+  const stopCameraStream = () => {
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach((track) => {
+        track.stop();
+      });
+      mediaStreamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+  };
+
+  const startCameraStream = async (targetFacingMode: 'environment' | 'user') => {
+    setIsCameraLoading(true);
+    setCameraError(null);
+    stopCameraStream();
+
+    try {
+      if (!navigator?.mediaDevices?.getUserMedia) {
+        throw new Error('Live camera streaming is not supported by this browser. Please use the device camera button below.');
+      }
+
+      const constraints: MediaStreamConstraints = {
+        video: {
+          facingMode: { ideal: targetFacingMode },
+          width: { ideal: 1920 },
+          height: { ideal: 1080 }
+        },
+        audio: false
+      };
+
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      mediaStreamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play();
+      }
+      setIsCameraLoading(false);
+    } catch (err: any) {
+      console.warn('Camera stream error:', err);
+      setIsCameraLoading(false);
+      if (err?.name === 'NotAllowedError' || err?.name === 'PermissionDeniedError') {
+        setCameraError('Camera access was denied. Please allow camera permissions in your browser, or tap the button below to use your device camera.');
+      } else {
+        setCameraError(err?.message || 'Unable to open camera stream. Please use your device camera.');
+      }
+    }
+  };
+
+  const handleOpenLiveCamera = () => {
+    setIsCameraModalOpen(true);
+    startCameraStream(facingMode);
+  };
+
+  const handleCloseLiveCamera = () => {
+    stopCameraStream();
+    setIsCameraModalOpen(false);
+    setCameraError(null);
+  };
+
+  const handleToggleFacingMode = () => {
+    const nextMode = facingMode === 'environment' ? 'user' : 'environment';
+    setFacingMode(nextMode);
+    startCameraStream(nextMode);
+  };
+
+  const handleCaptureLivePhoto = () => {
+    if (!videoRef.current) return;
+    const video = videoRef.current;
+    if (video.videoWidth === 0 || video.videoHeight === 0) return;
+
+    // Visual shutter flash effect
+    setIsShutterFlashing(true);
+    setTimeout(() => setIsShutterFlashing(false), 200);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Flip horizontally if front selfie camera
+    if (facingMode === 'user') {
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+    }
+
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      const file = new File([blob], `wedding-snap-${Date.now()}.jpg`, { type: 'image/jpeg' });
+      const previewUrl = URL.createObjectURL(file);
+
+      const newItem: SelectedFileItem = {
+        id: 'file-' + Math.random().toString(36).substring(2, 9),
+        file,
+        previewUrl
+      };
+
+      setSelectedFiles((prev) => [...prev, newItem]);
+      handleCloseLiveCamera();
+    }, 'image/jpeg', 0.95);
+  };
+
+  // Ensure camera streams are stopped on component unmount
+  useEffect(() => {
+    return () => {
+      stopCameraStream();
+    };
+  }, []);
 
   // Subscribe to real-time photo stream
   useEffect(() => {
@@ -368,7 +493,7 @@ export default function GuestPhotoUpload() {
 
               <button
                 type="button"
-                onClick={() => cameraInputRef.current?.click()}
+                onClick={handleOpenLiveCamera}
                 className="py-3 px-4 rounded-xl bg-white hover:bg-pink-50 border-2 border-[#5A1827] text-[#5A1827] font-sans font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm hover:shadow-md transition-all cursor-pointer active:scale-98"
               >
                 <Camera className="w-4 h-4 text-[#5A1827]" />
@@ -697,6 +822,170 @@ export default function GuestPhotoUpload() {
                     <span>{activeLightboxPhoto.likes || 1}</span>
                   </button>
                 </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* LIVE CAMERA VIEWFINDER MODAL */}
+      <AnimatePresence>
+        {isCameraModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-4"
+          >
+            <div 
+              className="relative w-full max-w-lg bg-stone-950 rounded-3xl overflow-hidden shadow-2xl border border-stone-800 flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header Bar */}
+              <div className="p-4 bg-stone-900/90 text-white flex items-center justify-between border-b border-stone-800 z-10">
+                <div className="flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
+                  <div>
+                    <h3 className="text-sm font-sans font-bold text-white">Live Camera</h3>
+                    <p className="text-[11px] text-stone-400 font-serif italic">Snap a wedding memory for Sandra &amp; Sam</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {/* Flip camera button */}
+                  <button
+                    type="button"
+                    onClick={handleToggleFacingMode}
+                    disabled={isCameraLoading || !!cameraError}
+                    className="p-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-40"
+                    title="Flip camera (Front / Back)"
+                  >
+                    <RefreshCw className={`w-4 h-4 ${isCameraLoading ? 'animate-spin' : ''}`} />
+                    <span className="hidden sm:inline font-sans text-xs">
+                      {facingMode === 'environment' ? 'Selfie' : 'Back'}
+                    </span>
+                  </button>
+
+                  {/* Close button */}
+                  <button
+                    type="button"
+                    onClick={handleCloseLiveCamera}
+                    className="p-2 bg-stone-800 hover:bg-stone-700 text-white rounded-xl transition-colors cursor-pointer"
+                    title="Close camera"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Viewfinder Screen */}
+              <div className="relative aspect-[4/3] sm:aspect-[16/11] bg-black overflow-hidden flex items-center justify-center">
+                {/* Live video */}
+                <video
+                  ref={videoRef}
+                  playsInline
+                  autoPlay
+                  muted
+                  className={`w-full h-full object-cover transition-transform duration-300 ${
+                    facingMode === 'user' ? '-scale-x-100' : ''
+                  }`}
+                />
+
+                {/* Shutter flash animation overlay */}
+                {isShutterFlashing && (
+                  <div className="absolute inset-0 bg-white pointer-events-none z-30 transition-opacity" />
+                )}
+
+                {/* Grid Overlay for framing */}
+                <div className="absolute inset-0 pointer-events-none border border-white/15 grid grid-cols-3 grid-rows-3 z-10">
+                  <div className="border-r border-b border-white/10" />
+                  <div className="border-r border-b border-white/10" />
+                  <div className="border-b border-white/10" />
+                  <div className="border-r border-b border-white/10" />
+                  <div className="border-r border-b border-white/10" />
+                  <div className="border-b border-white/10" />
+                  <div className="border-r border-b border-white/10" />
+                  <div className="border-r border-b border-white/10" />
+                  <div />
+                </div>
+
+                {/* Loading state */}
+                {isCameraLoading && (
+                  <div className="absolute inset-0 bg-stone-950/80 backdrop-blur-xs flex flex-col items-center justify-center text-white z-20 gap-3">
+                    <Loader2 className="w-8 h-8 text-[#D4AF37] animate-spin" />
+                    <p className="text-xs font-sans text-stone-300">Starting device camera...</p>
+                  </div>
+                )}
+
+                {/* Error state with fallback option */}
+                {cameraError && (
+                  <div className="absolute inset-0 bg-stone-950/95 p-6 flex flex-col items-center justify-center text-center text-white z-20">
+                    <AlertCircle className="w-10 h-10 text-amber-400 mb-2" />
+                    <h4 className="font-serif text-base font-bold text-stone-100 mb-1">Camera Notice</h4>
+                    <p className="text-xs text-stone-300 font-sans max-w-xs mb-5 leading-relaxed">
+                      {cameraError}
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-2.5 w-full max-w-xs">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleCloseLiveCamera();
+                          cameraInputRef.current?.click();
+                        }}
+                        className="w-full py-2.5 px-4 bg-[#722F37] hover:bg-[#8F3B43] text-white font-sans text-xs font-bold rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                      >
+                        <Camera className="w-4 h-4" />
+                        <span>Use Device Camera App</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => startCameraStream(facingMode)}
+                        className="w-full py-2.5 px-4 bg-stone-800 hover:bg-stone-700 text-stone-200 font-sans text-xs font-medium rounded-xl flex items-center justify-center gap-2 cursor-pointer"
+                      >
+                        <RefreshCw className="w-3.5 h-3.5" />
+                        <span>Retry</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Viewfinder Controls Bar */}
+              <div className="p-4 sm:p-5 bg-stone-950 flex items-center justify-between border-t border-stone-800">
+                <button
+                  type="button"
+                  onClick={handleToggleFacingMode}
+                  disabled={isCameraLoading || !!cameraError}
+                  className="w-12 h-12 rounded-full bg-stone-900 border border-stone-700 text-stone-200 flex items-center justify-center hover:bg-stone-800 transition-colors cursor-pointer disabled:opacity-40"
+                  title="Switch Camera (Front/Back)"
+                >
+                  <RefreshCw className="w-5 h-5" />
+                </button>
+
+                {/* Big Shutter Button */}
+                <button
+                  type="button"
+                  onClick={handleCaptureLivePhoto}
+                  disabled={isCameraLoading || !!cameraError}
+                  className="group relative w-18 h-18 rounded-full border-4 border-white flex items-center justify-center cursor-pointer transition-transform active:scale-95 disabled:opacity-40 shadow-lg"
+                  title="Snap Photo"
+                >
+                  <div className="w-14 h-14 rounded-full bg-[#E892A2] group-hover:bg-[#d87c8f] transition-colors flex items-center justify-center">
+                    <Camera className="w-6 h-6 text-white" />
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleCloseLiveCamera();
+                    cameraInputRef.current?.click();
+                  }}
+                  className="w-12 h-12 rounded-full bg-stone-900 border border-stone-700 text-stone-200 flex items-center justify-center hover:bg-stone-800 transition-colors cursor-pointer"
+                  title="Use native device camera / photo picker"
+                >
+                  <Upload className="w-5 h-5" />
+                </button>
               </div>
             </div>
           </motion.div>
