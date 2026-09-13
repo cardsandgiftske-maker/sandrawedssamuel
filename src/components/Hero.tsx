@@ -5,7 +5,6 @@ import { WEDDING_DETAILS } from '../data';
 
 import portrait1 from '../assets/images/sandra_and_Samuel_potrait_1.jpg';
 import portrait4 from '../assets/images/sandra_and_Samuel_potrait_4.jpg';
-import portrait5 from '../assets/images/sandra_and_Samuel_potrait_5.jpg';
 import portrait6 from '../assets/images/sandra_and_Samuel_potrait_6.jpg';
 import portrait7 from '../assets/images/sandra_and_Samuel_potrait_7.jpg';
 import portrait8 from '../assets/images/sandra_and_Samuel_potrait_8.jpg';
@@ -22,11 +21,6 @@ const COUPLE_PHOTOS = [
     src: portrait4,
     title: 'Joyful Union',
     subtitle: 'Blessed by God’s Perfect Timing',
-  },
-  {
-    src: portrait5,
-    title: 'Love & Happiness',
-    subtitle: 'Choosing each other Everyday',
   },
   {
     src: portrait6,
