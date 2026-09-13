@@ -44,9 +44,10 @@ export const WEDDING_DETAILS = {
   },
   dressCode: {
     formalTheme: 'Formal Elegance',
-    ladies: 'Elegant Dresses and gowns',
-    gentlemen: 'Suits or formal traditional wear',
+    ladies: 'Evening gowns, formal dresses, or elegant attire in any color of your choice',
+    gentlemen: 'Suits, blazers with formal trousers, or formal traditional wear in any color of your choice',
     guideline: 'Formal Elegance',
+    themeNote: 'Our wedding theme is Pink & Burgundy, but guests are warmly welcomed to wear any color of their choice without restriction.',
     kidsNote: 'With love for all our little ones, we invite you to join us for a day of celebration in formal elegance.'
   },
   bibleVerses: [
