@@ -4,7 +4,6 @@ import { Calendar, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 import { WEDDING_DETAILS } from '../data';
 
 import portrait1 from '../assets/images/sandra_and_Samuel_potrait_1.jpg';
-import portrait2 from '../assets/images/sandra_and_Samuel_potrait_2.jpg';
 import portrait4 from '../assets/images/sandra_and_Samuel_potrait_4.jpg';
 import portrait5 from '../assets/images/sandra_and_Samuel_potrait_5.jpg';
 import portrait6 from '../assets/images/sandra_and_Samuel_potrait_6.jpg';
@@ -18,11 +17,6 @@ const COUPLE_PHOTOS = [
     src: portrait1,
     title: 'Sandra & Samuel',
     subtitle: 'Celebrating Holy Matrimony',
-  },
-  {
-    src: portrait2,
-    title: 'Sandy Romance',
-    subtitle: 'Walking in Love & Grace',
   },
   {
     src: portrait4,
