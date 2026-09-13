@@ -3,19 +3,12 @@ import { Gift, Copy, Check, Heart, Smartphone, Mail, ArrowRight } from 'lucide-r
 import { WEDDING_DETAILS } from '../data';
 
 export default function Gifting() {
-  const [copiedPaybill, setCopiedPaybill] = useState(false);
-  const [copiedAccount, setCopiedAccount] = useState(false);
+  const [copiedNumber, setCopiedNumber] = useState(false);
 
-  const handleCopyPaybill = (text: string) => {
+  const handleCopyNumber = (text: string) => {
     navigator.clipboard.writeText(text);
-    setCopiedPaybill(true);
-    setTimeout(() => setCopiedPaybill(false), 2000);
-  };
-
-  const handleCopyAccount = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedAccount(true);
-    setTimeout(() => setCopiedAccount(false), 2000);
+    setCopiedNumber(true);
+    setTimeout(() => setCopiedNumber(false), 2000);
   };
 
   return (
@@ -60,9 +53,9 @@ export default function Gifting() {
                   <div className="flex items-start gap-3 p-3.5 bg-[#FFF5F7] rounded-xl border border-[#E892A2]/30">
                     <Smartphone className="w-5 h-5 text-[#722F37] shrink-0 mt-0.5" />
                     <div>
-                      <h5 className="font-sans font-bold text-xs uppercase tracking-wider text-[#722F37]">2. M-Pesa Paybill</h5>
+                      <h5 className="font-sans font-bold text-xs uppercase tracking-wider text-[#722F37]">2. M-Pesa Transfer</h5>
                       <p className="font-serif text-xs text-stone-600 mt-0.5">
-                        For friends and family wishing to send digital gifts via Lipa Na M-Pesa Paybill and Account number.
+                        For friends and family wishing to send digital gifts directly via M-Pesa.
                       </p>
                     </div>
                   </div>
@@ -78,39 +71,39 @@ export default function Gifting() {
             </div>
           </div>
 
-          {/* M-PESA Paybill Card */}
+          {/* M-PESA Send Money Card */}
           <div className="md:col-span-5 bg-gradient-to-br from-white via-[#FFF8F9] to-[#FFF0F3] border border-[#E892A2]/40 p-6 sm:p-8 rounded-3xl shadow-lg flex flex-col justify-between items-center text-center relative overflow-hidden">
             {/* Top Badge */}
             <div className="w-full flex flex-col items-center">
               <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-green-50 border border-green-200 text-green-800 rounded-full text-[10px] uppercase font-sans font-bold tracking-widest mb-4">
                 <Smartphone className="w-3.5 h-3.5" />
-                <span>LIPA NA M-PESA</span>
+                <span>SAFARICOM M-PESA</span>
               </div>
 
               <h4 className="font-serif text-xl text-stone-900 mb-1 font-medium">DIGITAL GIFT</h4>
               <p className="text-stone-500 text-xs font-sans mb-6 font-medium">
-                Pay Bill Option
+                Send Money
               </p>
 
-              {/* Key-Value Copy Blocks */}
+              {/* Key-Value Display Blocks */}
               <div className="w-full space-y-3 mb-5">
-                {/* Paybill Block */}
+                {/* M-Pesa Number Block with Copy Button */}
                 <div className="bg-white border border-[#E892A2]/40 rounded-2xl p-3.5 flex items-center justify-between shadow-xs">
                   <div className="text-left">
-                    <p className="text-[10px] text-stone-400 uppercase font-sans font-bold tracking-wider">Business No. (Paybill)</p>
-                    <p className="text-2xl font-mono font-bold text-[#722F37] tracking-wide">{WEDDING_DETAILS.registry.paybillNumber}</p>
+                    <p className="text-[10px] text-stone-400 uppercase font-sans font-bold tracking-wider">M-Pesa Number</p>
+                    <p className="text-2xl font-mono font-bold text-[#722F37] tracking-wide">{WEDDING_DETAILS.registry.mpesaNumber}</p>
                   </div>
                   <button
                     type="button"
-                    onClick={() => handleCopyPaybill(WEDDING_DETAILS.registry.paybillNumber)}
+                    onClick={() => handleCopyNumber(WEDDING_DETAILS.registry.mpesaNumber)}
                     className={`p-2 sm:p-2.5 rounded-xl border flex items-center gap-1.5 transition-all cursor-pointer ${
-                      copiedPaybill
+                      copiedNumber
                         ? 'bg-green-50 border-green-200 text-green-700 font-bold'
                         : 'bg-stone-50 border border-stone-200 text-stone-600 hover:text-[#722F37] hover:border-[#C86B85]'
                     }`}
-                    title="Copy Paybill Number"
+                    title="Copy M-Pesa Number"
                   >
-                    {copiedPaybill ? (
+                    {copiedNumber ? (
                       <>
                         <Check className="w-3.5 h-3.5 text-green-600" />
                         <span className="text-xs">Copied</span>
@@ -124,34 +117,10 @@ export default function Gifting() {
                   </button>
                 </div>
 
-                {/* Account Number Block */}
-                <div className="bg-white border border-[#E892A2]/40 rounded-2xl p-3.5 flex items-center justify-between shadow-xs">
-                  <div className="text-left">
-                    <p className="text-[10px] text-stone-400 uppercase font-sans font-bold tracking-wider">Account Number</p>
-                    <p className="text-lg sm:text-xl font-serif font-bold text-stone-850">{WEDDING_DETAILS.registry.accountNumber}</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleCopyAccount(WEDDING_DETAILS.registry.accountNumber)}
-                    className={`p-2 sm:p-2.5 rounded-xl border flex items-center gap-1.5 transition-all cursor-pointer ${
-                      copiedAccount
-                        ? 'bg-green-50 border-green-200 text-green-700 font-bold'
-                        : 'bg-stone-50 border border-stone-200 text-stone-600 hover:text-[#722F37] hover:border-[#C86B85]'
-                    }`}
-                    title="Copy Account Number"
-                  >
-                    {copiedAccount ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-green-600" />
-                        <span className="text-xs">Copied</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3.5 h-3.5" />
-                        <span className="text-xs">Copy</span>
-                      </>
-                    )}
-                  </button>
+                {/* Name Block without Copy Button */}
+                <div className="bg-white border border-[#E892A2]/40 rounded-2xl p-3.5 text-left shadow-xs">
+                  <p className="text-[10px] text-stone-400 uppercase font-sans font-bold tracking-wider">Name</p>
+                  <p className="text-lg sm:text-xl font-serif font-bold text-stone-850 mt-0.5">{WEDDING_DETAILS.registry.accountName}</p>
                 </div>
               </div>
             </div>
@@ -162,10 +131,10 @@ export default function Gifting() {
                 <span>Quick Payment Steps</span>
               </p>
               <ol className="text-[11px] text-stone-600 font-sans space-y-0.5 list-decimal list-inside">
-                <li>M-Pesa &gt; Lipa na M-Pesa &gt; Pay Bill</li>
-                <li>Enter Business No: <strong className="text-stone-850 font-mono">{WEDDING_DETAILS.registry.paybillNumber}</strong></li>
-                <li>Enter Account No: <strong className="text-stone-850">{WEDDING_DETAILS.registry.accountNumber}</strong></li>
-                <li>Enter Amount &amp; PIN to complete</li>
+                <li>M-Pesa &gt; Send Money</li>
+                <li>Enter Phone No: <strong className="text-stone-850 font-mono">{WEDDING_DETAILS.registry.mpesaNumber}</strong></li>
+                <li>Enter Amount &amp; PIN</li>
+                <li>Confirm recipient name: <strong className="text-stone-850">{WEDDING_DETAILS.registry.accountName}</strong></li>
               </ol>
             </div>
 
