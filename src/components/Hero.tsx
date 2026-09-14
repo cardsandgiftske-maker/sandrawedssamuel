@@ -79,6 +79,7 @@ export default function Hero() {
     return () => clearInterval(interval);
   }, [nextSlide, isPaused]);
 
+
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-[#FAF2F4] text-stone-850 py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8" id="hero-section">
       {/* Clean, subtle background tone */}
@@ -107,10 +108,10 @@ export default function Hero() {
                 <motion.div
                   key={currentPhotoIndex}
                   custom={direction}
-                  initial={{ opacity: 0, scale: 1.05 }}
+                  initial={{ opacity: 0, scale: 1.03 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.97 }}
-                  transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
                   className="absolute inset-0 w-full h-full"
                 >
                   <img
@@ -121,15 +122,15 @@ export default function Hero() {
                   />
 
                   {/* Gradient overlay for bottom caption readability */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-black/20 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10 pointer-events-none" />
 
                   {/* Bottom Caption Overlay */}
                   <div className="absolute bottom-0 inset-x-0 p-3 sm:p-4 text-left pointer-events-none flex items-end justify-between">
                     <div>
-                      <p className="text-white font-serif text-xs sm:text-sm md:text-base font-bold drop-shadow-md">
+                      <p className="text-white font-serif text-xs sm:text-sm md:text-base font-bold drop-shadow-sm">
                         {COUPLE_PHOTOS[currentPhotoIndex].title}
                       </p>
-                      <p className="text-[#F2D7DC] text-[10px] sm:text-xs font-sans tracking-wide drop-shadow-sm opacity-90">
+                      <p className="text-stone-200 text-[10px] sm:text-xs font-sans tracking-wide opacity-90">
                         {COUPLE_PHOTOS[currentPhotoIndex].subtitle}
                       </p>
                     </div>
@@ -138,7 +139,7 @@ export default function Hero() {
               </AnimatePresence>
 
               {/* Top Corner Photo Index Badge */}
-              <div className="absolute top-2.5 right-2.5 z-20 px-2.5 py-1 rounded-full bg-black/45 backdrop-blur-md border border-white/20 text-white font-sans text-[10px] sm:text-xs font-medium tracking-wider">
+              <div className="absolute top-2.5 right-2.5 z-20 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-xs border border-white/20 text-white font-sans text-[10px] sm:text-xs font-medium tracking-wider">
                 {currentPhotoIndex + 1} / {COUPLE_PHOTOS.length}
               </div>
 
@@ -149,7 +150,7 @@ export default function Hero() {
                   e.stopPropagation();
                   prevSlide();
                 }}
-                className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/40 hover:bg-[#5A1827]/80 active:scale-95 backdrop-blur-md border border-white/30 text-white flex items-center justify-center transition-all cursor-pointer shadow-lg opacity-85 hover:opacity-100"
+                className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/35 hover:bg-black/60 active:scale-95 text-white flex items-center justify-center transition-all cursor-pointer shadow-sm opacity-85 hover:opacity-100"
                 aria-label="Previous photo"
                 title="Previous Photo"
               >
@@ -163,7 +164,7 @@ export default function Hero() {
                   e.stopPropagation();
                   nextSlide();
                 }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/40 hover:bg-[#5A1827]/80 active:scale-95 backdrop-blur-md border border-white/30 text-white flex items-center justify-center transition-all cursor-pointer shadow-lg opacity-85 hover:opacity-100"
+                className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/35 hover:bg-black/60 active:scale-95 text-white flex items-center justify-center transition-all cursor-pointer shadow-sm opacity-85 hover:opacity-100"
                 aria-label="Next photo"
                 title="Next Photo"
               >
@@ -182,120 +183,119 @@ export default function Hero() {
                     }}
                     className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
                       idx === currentPhotoIndex
-                        ? 'w-5 sm:w-6 bg-[#D4AF37] shadow-sm'
+                        ? 'w-5 sm:w-6 bg-[#D4AF37]'
                         : 'w-1.5 bg-white/60 hover:bg-white'
                     }`}
                     aria-label={`Go to slide ${idx + 1}`}
                   />
                 ))}
               </div>
-
             </div>
           </motion.div>
 
-          {/* Feature tagline badge with Warm Gold Accents & Foil Trim */}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-[#FFFDF8] via-white to-[#FFFDF8] border-2 border-[#D4AF37]/70 text-[#5A1827] text-xs font-serif italic mb-5 shadow-sm backdrop-blur-sm relative z-10"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
-            <span className="font-bold tracking-wide">{WEDDING_DETAILS.couple.featureHeadline}</span>
-            <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
-          </motion.div>
-
-          {/* Invitation introductory line with Gold Ornamental Dividers */}
+          {/* Feature tagline badge */}
           <motion.div
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-stone-700 font-serif leading-relaxed text-sm sm:text-base max-w-2xl mx-auto mb-5 px-2 relative z-10"
+            transition={{ duration: 0.8, delay: 0.25 }}
+            className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#FAF0F2] text-[#5A1827] text-xs font-serif italic mb-4"
           >
-            <div className="flex items-center justify-center gap-3 mb-2 opacity-80">
-              <span className="w-12 h-px bg-gradient-to-r from-transparent to-[#D4AF37]" />
-              <span className="text-[#D4AF37] text-xs">❖</span>
-              <span className="w-12 h-px bg-gradient-to-l from-transparent to-[#D4AF37]" />
-            </div>
-
-            <p className="italic text-stone-600 text-sm sm:text-base">
-              Together with their families, joyfully invite you to celebrate the holy matrimony and union of
-            </p>
-
-            <div className="flex items-center justify-center gap-3 mt-2.5 opacity-80">
-              <span className="w-12 h-px bg-gradient-to-r from-transparent to-[#D4AF37]" />
-              <span className="text-[#D4AF37] text-xs">❖</span>
-              <span className="w-12 h-px bg-gradient-to-l from-transparent to-[#D4AF37]" />
-            </div>
+            <Sparkles className="w-3.5 h-3.5 text-[#C5A059]" />
+            <span className="font-semibold tracking-wide">{WEDDING_DETAILS.couple.featureHeadline}</span>
+            <Sparkles className="w-3.5 h-3.5 text-[#C5A059]" />
           </motion.div>
 
-          {/* Main Couple Names with Deep Burgundy & Warm Gold Ampersand */}
-          <motion.h1
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.55 }}
-            className="text-5xl sm:text-6xl md:text-7xl font-display font-light tracking-tight mb-4 relative z-10"
-          >
-            <span className="block mb-1 md:inline md:mb-0 text-[#5A1827] font-bold drop-shadow-sm">{WEDDING_DETAILS.couple.bride}</span>
-            <span className="font-serif text-[#D4AF37] mx-3 text-4xl sm:text-5xl md:text-6xl italic font-normal drop-shadow-[0_2px_4px_rgba(212,175,55,0.3)]">&amp;</span>
-            <span className="block mt-1 md:inline md:mt-0 text-[#5A1827] font-bold drop-shadow-sm">{WEDDING_DETAILS.couple.groom}</span>
-          </motion.h1>
-
-          {/* Hashtag with Warm Gold Borders */}
+          {/* Invitation introductory line */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
-            className="text-[#5A1827] font-sans text-xs tracking-widest font-extrabold uppercase mb-5 flex items-center justify-center gap-2 relative z-10"
+            transition={{ duration: 0.8, delay: 0.35 }}
+            className="text-stone-600 font-serif leading-relaxed text-sm sm:text-base max-w-2xl mx-auto mb-4 px-2"
           >
-            <span className="w-10 h-px bg-gradient-to-r from-transparent to-[#D4AF37]" />
-            <span className="text-[#8E5B23] font-bold">#{WEDDING_DETAILS.couple.nickname}</span>
-            <span className="w-10 h-px bg-gradient-to-l from-transparent to-[#D4AF37]" />
+            <p className="italic">
+              Together with their families, joyfully invite you to celebrate the holy matrimony and union of
+            </p>
+          </motion.div>
+
+          {/* Main Couple Names */}
+          <motion.h1
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.45 }}
+            className="text-4xl sm:text-5xl md:text-6xl font-display tracking-tight mb-3 text-stone-900"
+          >
+            <span className="text-[#5A1827] font-bold">{WEDDING_DETAILS.couple.bride}</span>
+            <span className="font-serif text-[#C5A059] mx-3 text-3xl sm:text-4xl md:text-5xl italic font-normal">&amp;</span>
+            <span className="text-[#5A1827] font-bold">{WEDDING_DETAILS.couple.groom}</span>
+          </motion.h1>
+
+          {/* Parents: Daughter of & Son of */}
+          <motion.div
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 max-w-xl mx-auto w-full mb-3 px-2"
+          >
+            <div className="text-center sm:text-right">
+              <span className="block text-xs font-serif italic text-[#8E5B23]">
+                Daughter of
+              </span>
+              <span className="font-serif text-sm sm:text-base font-semibold text-stone-800 tracking-wide">
+                {WEDDING_DETAILS.parents.bride.father} &amp; {WEDDING_DETAILS.parents.bride.mother}
+              </span>
+            </div>
+
+            <div className="hidden sm:block w-px h-7 bg-stone-300/80" />
+            <div className="sm:hidden w-12 h-px bg-stone-200 my-0.5" />
+
+            <div className="text-center sm:text-left">
+              <span className="block text-xs font-serif italic text-[#8E5B23]">
+                Son of
+              </span>
+              <span className="font-serif text-sm sm:text-base font-semibold text-stone-800 tracking-wide">
+                {WEDDING_DETAILS.parents.groom.father} &amp; {WEDDING_DETAILS.parents.groom.mother}
+              </span>
+            </div>
           </motion.div>
 
           {/* Request presence string */}
           <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.75 }}
-            className="text-stone-700 font-serif tracking-wide text-sm md:text-base mb-6 max-w-xl mx-auto leading-relaxed italic relative z-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="text-stone-600 font-serif tracking-wide text-sm md:text-base mb-6 max-w-xl mx-auto leading-relaxed italic"
           >
             as they exchange sacred vows and unite their lives in love, faith, and joy.
           </motion.p>
 
-          {/* Wedding Date Only Pill with Opulent Gold Accents */}
+          {/* Wedding Date Pill */}
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="inline-flex items-center gap-2.5 text-stone-900 font-sans text-xs sm:text-sm font-semibold mb-8 bg-gradient-to-r from-[#FFFDF9] via-white to-[#FFFDF9] backdrop-blur-sm border-2 border-[#D4AF37] px-7 py-3 rounded-full shadow-[0_6px_20px_rgba(212,175,55,0.2)] relative z-10"
+            transition={{ duration: 0.8, delay: 0.65 }}
+            className="inline-flex items-center gap-2 text-stone-850 font-sans text-xs sm:text-sm font-semibold mb-7 bg-[#FAF0F2] border border-[#E892A2]/40 px-5 py-2.5 rounded-full"
           >
-            <Calendar className="w-4 h-4 text-[#D4AF37]" />
-            <span className="tracking-wider text-[#5A1827] font-extrabold">Saturday, 17th October 2026</span>
+            <Calendar className="w-4 h-4 text-[#5A1827]" />
+            <span className="tracking-wider text-[#5A1827] font-bold">Saturday, 17th October 2026</span>
           </motion.div>
 
-          {/* Biblical Quote: Isaiah 60:22 with Gold Borders and Accents */}
+          {/* Biblical Quote */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1.2, delay: 0.85 }}
-            className="max-w-lg mx-auto text-stone-850 italic font-serif text-sm md:text-base border-y-2 border-[#D4AF37]/60 py-4 px-4 bg-[#FAF0F2]/40 rounded-lg relative z-10"
+            transition={{ duration: 0.9, delay: 0.7 }}
+            className="max-w-lg mx-auto text-stone-700 italic font-serif text-sm md:text-base border-t border-b border-stone-200 py-3.5 px-4"
           >
             <div className="text-center mb-1">
-              <span className="text-[#D4AF37] text-lg font-serif">“</span>
-              <span className="text-stone-850">{WEDDING_DETAILS.bibleVerses[0].text}</span>
-              <span className="text-[#D4AF37] text-lg font-serif">”</span>
+              <span>“{WEDDING_DETAILS.bibleVerses[0].text}”</span>
             </div>
-            <p className="text-[#996515] text-xs tracking-widest uppercase font-sans font-bold not-italic mt-1.5 flex items-center justify-center gap-1.5">
-              <span className="w-4 h-px bg-[#D4AF37]" />
-              <span>{WEDDING_DETAILS.bibleVerses[0].reference}</span>
-              <span className="w-4 h-px bg-[#D4AF37]" />
+            <p className="text-stone-500 text-xs tracking-widest uppercase font-sans font-semibold not-italic mt-1">
+              {WEDDING_DETAILS.bibleVerses[0].reference}
             </p>
           </motion.div>
         </motion.div>
       </div>
-
-      <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#F1D7DC] to-transparent pointer-events-none" />
     </section>
   );
 }
+
