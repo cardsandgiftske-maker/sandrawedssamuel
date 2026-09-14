@@ -9,7 +9,6 @@ export const WEDDING_DETAILS = {
     brideFull: 'Sandra Chepchumba Kiptoo',
     groomFull: 'Samuel Ochieng Okello',
     nickname: 'Sandra&Sam2026',
-    hashtag: '#Sandra&Sam2026',
     featureHeadline: 'Our Love Story & Celebration of Holy Matrimony',
     loveStory: 'Some of life’s most beautiful moments are the ones we never planned. What began as a journey of two people has grown into a love filled with friendship, laughter, memories and countless reasons to be grateful. Through every season, we have found our way to each other, and now we are excited to take the next step together. From this day forward, we choose each other — every day, for the rest of our lives. And we would love for you to be there as we say: “I do.” 💍',
   },
@@ -17,6 +16,18 @@ export const WEDDING_DETAILS = {
     brideFamily: "Mr. Charles Kiptoo & Mrs. Nancy Kiptoo",
     groomFamily: "Mr. James Okello & Mrs. Angeline Okello",
     invitationMessage: "With grateful hearts and the blessings of our families, Mr. Charles Kiptoo & Mrs. Nancy Kiptoo together with Mr. James Okello & Mrs. Angeline Okello joyfully invite you to celebrate the wedding of their children, Sandra Chepchumba Kiptoo & Samuel Ochieng Okello."
+  },
+  parents: {
+    bride: {
+      father: 'Charles Kiptoo',
+      mother: 'Nancy Kiptoo',
+      names: 'Charles Kiptoo & Nancy Kiptoo'
+    },
+    groom: {
+      father: 'James Okello',
+      mother: 'Angeline Okello',
+      names: 'James Okello & Angeline Okello'
+    }
   },
   ceremony: {
     time: '9:00 AM (9:00 AM - 11:00 AM)',
