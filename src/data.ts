@@ -19,14 +19,14 @@ export const WEDDING_DETAILS = {
   },
   parents: {
     bride: {
-      father: 'Charles Kiptoo',
-      mother: 'Nancy Kiptoo',
-      names: 'Charles Kiptoo & Nancy Kiptoo'
+      father: 'Mr. Charles Kiptoo',
+      mother: 'Mrs. Nancy Kiptoo',
+      names: 'Mr. Charles Kiptoo & Mrs. Nancy Kiptoo'
     },
     groom: {
-      father: 'James Okello',
-      mother: 'Angeline Okello',
-      names: 'James Okello & Angeline Okello'
+      father: 'Mr. James Okello',
+      mother: 'Mrs. Angeline Okello',
+      names: 'Mr. James Okello & Mrs. Angeline Okello'
     }
   },
   ceremony: {
