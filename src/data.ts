@@ -9,6 +9,7 @@ export const WEDDING_DETAILS = {
     brideFull: 'Sandra Chepchumba Kiptoo',
     groomFull: 'Samuel Ochieng Okello',
     nickname: 'Sandra&Sam2026',
+    hashtag: '#Sandra&Sam2026',
     featureHeadline: 'Our Love Story & Celebration of Holy Matrimony',
     loveStory: 'Some of life’s most beautiful moments are the ones we never planned. What began as a journey of two people has grown into a love filled with friendship, laughter, memories and countless reasons to be grateful. Through every season, we have found our way to each other, and now we are excited to take the next step together. From this day forward, we choose each other — every day, for the rest of our lives. And we would love for you to be there as we say: “I do.” 💍',
   },
@@ -17,16 +18,25 @@ export const WEDDING_DETAILS = {
     groomFamily: "Mr. James Okello & Mrs. Angeline Okello",
     invitationMessage: "With grateful hearts and the blessings of our families, Mr. Charles Kiptoo & Mrs. Nancy Kiptoo together with Mr. James Okello & Mrs. Angeline Okello joyfully invite you to celebrate the wedding of their children, Sandra Chepchumba Kiptoo & Samuel Ochieng Okello."
   },
+  complimentsNote: {
+    title: 'With Our Compliments',
+    line1: 'This is a private invitation, personally prepared for you.',
+    line2Prefix: 'We would be grateful if you would kindly ',
+    line2Bold: 'keep the invitation link confidential and refrain from sharing or forwarding it',
+    line2Suffix: '.',
+    line3: 'With appreciation for helping us preserve the intimacy of our celebration.',
+    signature: 'Sandra & Sam'
+  },
   parents: {
     bride: {
-      father: 'Mr. Charles Kiptoo',
-      mother: 'Mrs. Nancy Kiptoo',
-      names: 'Mr. Charles Kiptoo & Mrs. Nancy Kiptoo'
+      father: 'Charles Kiptoo',
+      mother: 'Nancy Kiptoo',
+      names: 'Charles Kiptoo & Nancy Kiptoo'
     },
     groom: {
-      father: 'Mr. James Okello',
-      mother: 'Mrs. Angeline Okello',
-      names: 'Mr. James Okello & Mrs. Angeline Okello'
+      father: 'James Okello',
+      mother: 'Angeline Okello',
+      names: 'James Okello & Angeline Okello'
     }
   },
   ceremony: {
