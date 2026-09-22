@@ -298,4 +298,44 @@ export default function Hero() {
     </section>
   );
 }
+{/* With Our Compliments - Private Invitation Note */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.75 }}
+            className="mt-8 w-full max-w-lg mx-auto rounded-2xl bg-[#FFF9FA] border border-[#E892A2]/30 p-5 sm:p-6 text-center shadow-xs"
+          >
+            <div className="flex items-center justify-center gap-2 mb-2.5">
+              <span className="w-6 h-px bg-[#D4AF37]" />
+              <h3 className="text-[#5A1827] font-serif text-sm sm:text-base font-bold tracking-wider uppercase">
+                {WEDDING_DETAILS.complimentsNote.title}
+              </h3>
+              <span className="w-6 h-px bg-[#D4AF37]" />
+            </div>
+
+            <p className="text-stone-700 font-serif italic text-xs sm:text-sm mb-3 leading-relaxed">
+              {WEDDING_DETAILS.complimentsNote.line1}
+            </p>
+
+            <p className="text-stone-700 font-sans text-xs sm:text-sm leading-relaxed mb-3">
+              {WEDDING_DETAILS.complimentsNote.line2Prefix}
+              <strong className="font-semibold text-stone-900">
+                {WEDDING_DETAILS.complimentsNote.line2Bold}
+              </strong>
+              {WEDDING_DETAILS.complimentsNote.line2Suffix}
+            </p>
+
+            <div className="pt-3 border-t border-[#E892A2]/20 text-stone-600 font-serif italic text-xs sm:text-sm leading-relaxed">
+              <p>{WEDDING_DETAILS.complimentsNote.line3}</p>
+              <p className="font-serif font-bold text-[#5A1827] not-italic mt-1.5 text-sm tracking-wide">
+                {WEDDING_DETAILS.complimentsNote.signature}
+              </p>
+            </div>
+          </motion.div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 
