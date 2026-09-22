@@ -81,7 +81,7 @@ export default function Hero() {
 
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-[#FAF2F4] text-stone-850 py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8" id="hero-section">
+    <section className="relative min-h-screen flex items-center justify-center bg-[#FAF2F4] text-stone-900 py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8" id="hero-section">
       {/* Clean, subtle background tone */}
       <div className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-b from-[#FAF0F2] via-[#FAF2F4] to-[#F5E6E9]" />
 
@@ -91,7 +91,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="relative bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-14 border border-stone-200/80 shadow-xs flex flex-col items-center text-center w-full"
+          className="relative bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-14 border border-stone-200/80 shadow-sm flex flex-col items-center text-center w-full"
         >
           {/* Couple Photo Carousel Frame */}
           <motion.div
@@ -139,7 +139,7 @@ export default function Hero() {
               </AnimatePresence>
 
               {/* Top Corner Photo Index Badge */}
-              <div className="absolute top-2.5 right-2.5 z-20 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-xs border border-white/20 text-white font-sans text-[10px] sm:text-xs font-medium tracking-wider">
+              <div className="absolute top-2.5 right-2.5 z-20 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 text-white font-sans text-[10px] sm:text-xs font-medium tracking-wider">
                 {currentPhotoIndex + 1} / {COUPLE_PHOTOS.length}
               </div>
 
@@ -273,7 +273,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.65 }}
-            className="inline-flex items-center gap-2 text-stone-850 font-sans text-xs sm:text-sm font-semibold mb-7 bg-[#FAF0F2] border border-[#E892A2]/40 px-5 py-2.5 rounded-full"
+            className="inline-flex items-center gap-2 text-stone-900 font-sans text-xs sm:text-sm font-semibold mb-7 bg-[#FAF0F2] border border-[#E892A2]/40 px-5 py-2.5 rounded-full"
           >
             <Calendar className="w-4 h-4 text-[#5A1827]" />
             <span className="tracking-wider text-[#5A1827] font-bold">Saturday, 17th October 2026</span>
@@ -298,12 +298,13 @@ export default function Hero() {
     </section>
   );
 }
-{/* With Our Compliments - Private Invitation Note */}
+
+          {/* With Our Compliments - Private Invitation Note */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.75 }}
-            className="mt-8 w-full max-w-lg mx-auto rounded-2xl bg-[#FFF9FA] border border-[#E892A2]/30 p-5 sm:p-6 text-center shadow-xs"
+            className="mt-8 w-full max-w-lg mx-auto rounded-2xl bg-[#FFF9FA] border border-[#E892A2]/30 p-5 sm:p-6 text-center shadow-sm"
           >
             <div className="flex items-center justify-center gap-2 mb-2.5">
               <span className="w-6 h-px bg-[#D4AF37]" />
@@ -337,5 +338,3 @@ export default function Hero() {
     </section>
   );
 }
-
-
