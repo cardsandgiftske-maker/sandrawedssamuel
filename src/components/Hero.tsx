@@ -79,7 +79,6 @@ export default function Hero() {
     return () => clearInterval(interval);
   }, [nextSlide, isPaused]);
 
-
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-[#FAF2F4] text-stone-900 py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8" id="hero-section">
       {/* Clean, subtle background tone */}
@@ -293,11 +292,6 @@ export default function Hero() {
               {WEDDING_DETAILS.bibleVerses[0].reference}
             </p>
           </motion.div>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
 
           {/* With Our Compliments - Private Invitation Note */}
           <motion.div
