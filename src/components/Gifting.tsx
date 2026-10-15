@@ -3,7 +3,7 @@ import { Gift, Copy, Check, Heart, Smartphone, Mail, ArrowRight } from 'lucide-r
 import { WEDDING_DETAILS } from '../data';
 
 export default function Gifting() {
-  const [copiedNumber, setCopiedNumber] = useState(false);
+  const [copiedPaybill, setCopiedNumber] = useState(false);
 
   const handleCopyNumber = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -71,7 +71,7 @@ export default function Gifting() {
             </div>
           </div>
 
-          {/* M-PESA Send Money Card */}
+          {/* M-PESA Lipa na M-Pesa Card */}
           <div className="md:col-span-5 bg-gradient-to-br from-white via-[#FFF8F9] to-[#FFF0F3] border border-[#E892A2]/40 p-6 sm:p-8 rounded-3xl shadow-lg flex flex-col justify-between items-center text-center relative overflow-hidden">
             {/* Top Badge */}
             <div className="w-full flex flex-col items-center">
@@ -82,28 +82,28 @@ export default function Gifting() {
 
               <h4 className="font-serif text-xl text-stone-900 mb-1 font-medium">DIGITAL GIFT</h4>
               <p className="text-stone-500 text-xs font-sans mb-6 font-medium">
-                Send Money
+                Lipa na M-Pesa
               </p>
 
               {/* Key-Value Display Blocks */}
               <div className="w-full space-y-3 mb-5">
-                {/* M-Pesa Number Block with Copy Button */}
+                {/* Paybill Number Block with Copy Button */}
                 <div className="bg-white border border-[#E892A2]/40 rounded-2xl p-3.5 flex items-center justify-between shadow-xs">
                   <div className="text-left">
-                    <p className="text-[10px] text-stone-400 uppercase font-sans font-bold tracking-wider">M-Pesa Number</p>
-                    <p className="text-2xl font-mono font-bold text-[#722F37] tracking-wide">{WEDDING_DETAILS.registry.mpesaNumber}</p>
+                    <p className="text-[10px] text-stone-400 uppercase font-sans font-bold tracking-wider">Paybill Number</p>
+                    <p className="text-2xl font-mono font-bold text-[#722F37] tracking-wide">{WEDDING_DETAILS.registry.paybillNumber}</p>
                   </div>
                   <button
                     type="button"
-                    onClick={() => handleCopyNumber(WEDDING_DETAILS.registry.mpesaNumber)}
+                    onClick={() => handleCopyNumber(WEDDING_DETAILS.registry.paybillNumber)}
                     className={`p-2 sm:p-2.5 rounded-xl border flex items-center gap-1.5 transition-all cursor-pointer ${
-                      copiedNumber
+                      copiedPaybill
                         ? 'bg-green-50 border-green-200 text-green-700 font-bold'
                         : 'bg-stone-50 border border-stone-200 text-stone-600 hover:text-[#722F37] hover:border-[#C86B85]'
                     }`}
-                    title="Copy M-Pesa Number"
+                    title="Copy Paybill Number"
                   >
-                    {copiedNumber ? (
+                    {copiedPaybill ? (
                       <>
                         <Check className="w-3.5 h-3.5 text-green-600" />
                         <span className="text-xs">Copied</span>
@@ -119,8 +119,8 @@ export default function Gifting() {
 
                 {/* Name Block without Copy Button */}
                 <div className="bg-white border border-[#E892A2]/40 rounded-2xl p-3.5 text-left shadow-xs">
-                  <p className="text-[10px] text-stone-400 uppercase font-sans font-bold tracking-wider">Name</p>
-                  <p className="text-lg sm:text-xl font-serif font-bold text-stone-850 mt-0.5">{WEDDING_DETAILS.registry.accountName}</p>
+                  <p className="text-[10px] text-stone-400 uppercase font-sans font-bold tracking-wider">Account Number</p>
+                  <p className="text-lg sm:text-xl font-serif font-bold text-stone-850 mt-0.5">{WEDDING_DETAILS.registry.accountNumber}</p>
                 </div>
               </div>
             </div>
@@ -131,10 +131,10 @@ export default function Gifting() {
                 <span>Quick Payment Steps</span>
               </p>
               <ol className="text-[11px] text-stone-600 font-sans space-y-0.5 list-decimal list-inside">
-                <li>M-Pesa &gt; Send Money</li>
-                <li>Enter Phone No: <strong className="text-stone-850 font-mono">{WEDDING_DETAILS.registry.mpesaNumber}</strong></li>
-                <li>Enter Amount &amp; PIN</li>
-                <li>Confirm recipient name: <strong className="text-stone-850">{WEDDING_DETAILS.registry.accountName}</strong></li>
+                <li>M-Pesa &gt; Lipa na M-Pesa &gt; Paybill</li>
+                <li>Enter Business No: <strong className="text-stone-850 font-mono">{WEDDING_DETAILS.registry.paybillNumber}</strong></li>
+                <li>Enter Account No: <strong className="text-stone-850">{WEDDING_DETAILS.registry.accountNumber}</strong></li>
+                <li>Enter amount and M-Pesa PIN, then confirm</li>
               </ol>
             </div>
 
